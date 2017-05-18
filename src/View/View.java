@@ -71,60 +71,51 @@ public class View {
         return this.frmMain;
     }
 
-    // 원하는 텍스트필드를 리턴해주는 메소드.
-    // 주로 모델에서 이 것을 사용할 것이다.
-    public JTextField getJTextField(String name) {
-        if (name.equals("txtLeftPath")) {
-            return this.txtLeftPath;
-        }
-        else if (name.equals("txtRightPath")) {
-            return this.txtRightPath;
-        }
 
+    public ScrollTextPane getScrollTextPane(String name) {
+        if ( name.equals("Left") ) return this.leftFilePane.getScrollTextPane();
+        else if ( name.equals("Right") ) return this.rightFilePane.getScrollTextPane();
         return null;
     }
 
-    // ---------------------------- 수정점!!
-    // 원하는 텍스트판를 리턴해주는 메소드.
-    // 주로 모델에서 이 것을 사용할 것이다.
-    public JTextPane getJTextPane(String name) {
-        if (name.equals("txtLeftTextPane")) {
-            return this.txtLeftTextPane;
-        }
-        else if (name.equals("txtRightTextPane")) {
-            return this.txtRightTextPane;
-        }
-
+    public FileTextPane getFileTextPane(String name) {
+        if ( name.equals("Left") ) return this.leftFilePane;
+        else if ( name.equals("Right") ) return this.rightFilePane;
         return null;
     }
+
 
     // 버튼들에 대한 액션리스너를 컨트롤러에 추가시킨다.
     // 그리고, 그 버튼들에 대해 이름을 설정해준다.
     // 나중에 발생하는 이벤트들을 구별하기 위함임.
     public void setActionListener(ActionListener al) {
-        btnLeftLoad.addActionListener(al);
-        btnLeftLoad.setName("btnLeftLoad");
-        btnLeftSave.addActionListener(al);
-        btnLeftSave.setName("btnLeftSave");
-        btnLeftEdit.addActionListener(al);
-        btnLeftEdit.setName("btnLeftEdit");
+        try {
+            leftFilePane.getButton("Load").addActionListener(al);
+            leftFilePane.getButton("Load").setName("btnLeftLoad");
+            leftFilePane.getButton("Save").addActionListener(al);
+            leftFilePane.getButton("Save").setName("btnLeftSave");
+            leftFilePane.getButton("Edit").addActionListener(al);
+            leftFilePane.getButton("Edit").setName("btnLeftEdit");
 
-        btnRightLoad.addActionListener(al);
-        btnRightLoad.setName("btnRightLoad");
-        btnRightSave.addActionListener(al);
-        btnRightSave.setName("btnRightSave");
-        btnRightEdit.addActionListener(al);
-        btnRightEdit.setName("btnRightEdit");
+            rightFilePane.getButton("Load").addActionListener(al);
+            rightFilePane.getButton("Load").setName("btnRightLoad");
+            rightFilePane.getButton("Save").addActionListener(al);
+            rightFilePane.getButton("Save").setName("btnRightSave");
+            rightFilePane.getButton("Edit").addActionListener(al);
+            rightFilePane.getButton("Edit").setName("btnRightEdit");
 
-        btnCompare.addActionListener(al);
-        btnCompare.setName("btnCompare");
-        btnMergeLeftToRight.addActionListener(al);
-        btnMergeLeftToRight.setName("btnMergeLeftToRight");
-        btnMergeLeftToRightAll.addActionListener(al);
-        btnMergeLeftToRightAll.setName("btnMergeLeftToRightAll");
-        btnMergeRightToLeft.addActionListener(al);
-        btnMergeRightToLeft.setName("btnMergeRightToLeft");
-        btnMergeRightToLeftAll.addActionListener(al);
-        btnMergeRightToLeftAll.setName("btnMergeRightToLeftAll");
+            ctlPane.getButton("Compare").addActionListener(al);
+            ctlPane.getButton("Compare").setName("btnCompare");
+            ctlPane.getButton("bMLTR").addActionListener(al);
+            ctlPane.getButton("bMLTR").setName("btnMergeLeftToRight");
+            ctlPane.getButton("bMLTRA").addActionListener(al);
+            ctlPane.getButton("bMLTRA").setName("btnMergeLeftToRightAll");
+            ctlPane.getButton("bMRTL").addActionListener(al);
+            ctlPane.getButton("bMRTL").setName("btnMergeRightToLeft");
+            ctlPane.getButton("bMRTLA").addActionListener(al);
+            ctlPane.getButton("bMRTLA").setName("btnMergeRightToLeftAll");
+        } catch ( NullPointerException e ) {
+            e.printStackTrace();
+        }
     }
 }
