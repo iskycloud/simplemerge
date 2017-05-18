@@ -7,19 +7,15 @@ package Model;
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import View.View;
 
-public class DiffModel {
+public class DiffModel extends Model {
 
     private View view;
     private JTextPane txtLeftPane, txtRightPane;
-    private FileModel leftFileModel, rightFileModel;
 
     public DiffModel() {
 
