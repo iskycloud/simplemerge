@@ -7,7 +7,7 @@ package View;
 import javax.swing.*;
 import java.awt.*;
 
-class ControlPane extends JPanel {
+public class ControlPane extends JPanel {
     private JButton btnCompare, btnMergeLeftToRightAll, btnMergeLeftToRight, btnMergeRightToLeft, btnMergeRightToLeftAll;
 
     ControlPane() {
@@ -29,5 +29,13 @@ class ControlPane extends JPanel {
         super.add(btnMergeRightToLeft, 3);
         super.add(btnMergeRightToLeftAll, 4);
     }
-    
+
+    public JButton getButton(String name) {
+        if ( name.equals("Compare") ) return this.btnCompare;
+        else if ( name.equals("bMLTR") ) return this.btnMergeLeftToRight;
+        else if ( name.equals("bMLTRA") ) return this.btnMergeLeftToRightAll;
+        else if ( name.equals("bMRTLA") ) return this.btnMergeRightToLeftAll;
+        else if ( name.equals("bMRTL") ) return this.btnMergeRightToLeft;
+        return null;
+    }
 }

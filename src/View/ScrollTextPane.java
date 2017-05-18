@@ -6,7 +6,7 @@ package View;
 
 import javax.swing.*;
 
-class ScrollTextPane extends JScrollPane {
+public class ScrollTextPane extends JScrollPane {
     private JTextPane txtPane = new JTextPane();
 
     ScrollTextPane() {
@@ -15,5 +15,9 @@ class ScrollTextPane extends JScrollPane {
 
     private void initialize() {
         super.setViewportView(txtPane);
+    }
+
+    public JTextPane getJTextPane() {
+        return this.txtPane;
     }
 }

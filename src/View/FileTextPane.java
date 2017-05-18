@@ -7,7 +7,7 @@ package View;
 import javax.swing.*;
 import java.awt.*;
 
-class FileTextPane extends JPanel {
+public class FileTextPane extends JPanel {
     private JPanel pnlFileNorth, pnlFileMenu;
     private JButton btnLoad, btnSave, btnEdit;
     private JTextField txtPath, txtStatus;
@@ -54,4 +54,24 @@ class FileTextPane extends JPanel {
         pnlFileMenu.add(btnEdit, 2);
     }
 
+    public JTextField getJTextField(String name) {
+        if ( name.equals("txtPath") ) return this.txtPath;
+        else if ( name.equals("txtStatus") ) return this.txtStatus;
+        return null;
+    }
+
+    public ScrollTextPane getScrollTextPane() {
+        return this.scrTxtPane;
+    }
+
+    public JButton getButton(String name) {
+        if ( name.equals("Load") ) {
+            return this.btnLoad;
+        } else if ( name.equals("Save") ) {
+            return this.btnSave;
+        } else if ( name.equals("Edit") ) {
+            return this.btnEdit;
+        }
+        return null;
+    }
 }

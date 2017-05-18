@@ -7,19 +7,15 @@ package Model;
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import View.View;
 
-public class DiffModel {
+public class DiffModel extends Model {
 
     private View view;
     private JTextPane txtLeftPane, txtRightPane;
-    private FileModel leftFileModel, rightFileModel;
 
     public DiffModel() {
 
@@ -27,11 +23,11 @@ public class DiffModel {
 
     public DiffModel(View view) {
         this.view = view;
-        this.txtLeftPane = view.getJTextPane("txtLeftTextPane");
-        this.txtRightPane = view.getJTextPane("txtRightTextPane");
+        this.txtLeftPane = view.getScrollTextPane(Model.LEFT).getJTextPane();
+        this.txtRightPane = view.getScrollTextPane(Model.RIGHT).getJTextPane();
 
-        leftFileModel = new FileModel("Left");
-        rightFileModel = new FileModel("Right");
+        leftFileModel = new FileModel(Model.LEFT);
+        rightFileModel = new FileModel(Model.RIGHT);
     }
 
     // LCS 알고리즘
@@ -84,8 +80,8 @@ public class DiffModel {
             leftTexts = leftFileModel.getLines();
             rightTexts = rightFileModel.getLines();
 
-            clearColor("Left");
-            clearColor("Right");
+            clearColor(Model.LEFT);
+            clearColor(Model.RIGHT);
 
             // 텍스트판에 적용시킬 스타일. 컬러 적용에 사용됨.
             StyledDocument ldoc = txtLeftPane.getStyledDocument(), rdoc = txtRightPane.getStyledDocument();
@@ -128,13 +124,14 @@ public class DiffModel {
         }
     }
 
+    // 모든 색을 제거해줌 = 초기화
     public void clearColor(String name) {
-        if ( name.equals("Left") ) {
+        if ( name.equals(Model.LEFT) ) {
             StyledDocument ldoc = txtLeftPane.getStyledDocument();
             StyleContext sc = StyleContext.getDefaultStyleContext();
             AttributeSet attrs = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Background, Color.WHITE);
             ldoc.setCharacterAttributes(0, txtLeftPane.getText().length(), attrs, true);
-        } else if ( name.equals("Right") ) {
+        } else if ( name.equals(Model.RIGHT) ) {
             StyledDocument rdoc = txtRightPane.getStyledDocument();
             StyleContext sc = StyleContext.getDefaultStyleContext();
             AttributeSet attrs = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Background, Color.WHITE);
@@ -149,26 +146,26 @@ public class DiffModel {
 
         if( returnVal == JFileChooser.APPROVE_OPTION) {
             //OPEN 버튼 누를 시
-            if (target.equals("Left")) { // 왼쪽 패널에서 오픈 버튼 눌렀다
+            if (target.equals(Model.LEFT)) { // 왼쪽 패널에서 오픈 버튼 눌렀다
                 File file = fileChooser.getSelectedFile();
                 leftFileModel.setFilePath(file.getPath());
-                view.getJTextField("txtLeftPath").setText(leftFileModel.getFilePath());
+                view.getFileTextPane(Model.LEFT).getJTextField("txtPath").setText(leftFileModel.getFilePath());
 
                 txtLeftPane.setText("");
-                clearColor("Left");
+                clearColor(Model.LEFT);
                 leftFileModel.setLines();
 
                 for (int i = 0; i < leftFileModel.getLines().size(); i++) {
                     txtLeftPane.setText(txtLeftPane.getText() + leftFileModel.getLines().get(i));
                     if (i != leftFileModel.getLines().size() - 1) txtLeftPane.setText(txtLeftPane.getText() + '\n');
                 }
-            } else if (target.equals("Right") ) { // 오른쪽 패널에서 오픈 버튼 눌렀다
+            } else if (target.equals(Model.RIGHT) ) { // 오른쪽 패널에서 오픈 버튼 눌렀다
                 File file = fileChooser.getSelectedFile();
                 rightFileModel.setFilePath(file.getPath());
-                view.getJTextField("txtRightPath").setText(rightFileModel.getFilePath());
+                view.getFileTextPane(Model.RIGHT).getJTextField("txtPath").setText(rightFileModel.getFilePath());
 
                 txtRightPane.setText("");
-                clearColor("Right");
+                clearColor(Model.RIGHT);
                 rightFileModel.setLines();
 
                 for (int i = 0; i < rightFileModel.getLines().size(); i++) {
