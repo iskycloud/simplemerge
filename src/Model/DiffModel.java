@@ -11,22 +11,27 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import View.View;
 
-public class Model {
+public class DiffModel {
 
     private View view;
     private JTextPane txtLeftPane, txtRightPane;
+    private FileModel leftFileModel, rightFileModel;
 
-    public Model() {
+    public DiffModel() {
 
     }
 
-    public Model(View view) {
+    public DiffModel(View view) {
         this.view = view;
         this.txtLeftPane = view.getJTextPane("txtLeftTextPane");
         this.txtRightPane = view.getJTextPane("txtRightTextPane");
+
+        leftFileModel = new FileModel("Left");
+        rightFileModel = new FileModel("Right");
     }
 
     // LCS 알고리즘
@@ -73,10 +78,11 @@ public class Model {
     // 텍스트 비교 메소드
     public void textCompare() {
         // 둘다 파일 경로가 올바른지?
-        if ( lPath.compareTo("") != 0 && rPath.compareTo("") != 0 ) {
+        if ( leftFileModel.getFilePath().compareTo("") != 0 && rightFileModel.getFilePath().compareTo("") != 0 ) {
             // 텍스트를 한 줄 단위로 스트링 배열에 저장한다.
-            String[] leftTexts = txtLeftPane.getText().split("\\n");
-            String[] rightTexts = txtRightPane.getText().split("\\n");
+            ArrayList<String> leftTexts, rightTexts;
+            leftTexts = leftFileModel.getLines();
+            rightTexts = rightFileModel.getLines();
 
             clearColor("Left");
             clearColor("Right");
@@ -88,14 +94,14 @@ public class Model {
             AttributeSet attrs = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Background, Color.YELLOW);
 
             // 왼쪽 파일 텍스트를 기준점으로 잡고, 열 단위로 lcs를 수행한다.
-            for(int row = 0; row < leftTexts.length; row++ ) {
+            for(int row = 0; row < leftTexts.size(); row++ ) {
                 // 왼쪽 파일 텍스트와 오른쪽 파일 텍스트 (각각 한줄 씩)에 대해 lcs를 수행한다
                 // 결과값은 스트링에 저장되며, 이는 색칠 과정에 사용될 것임.
-                String result = this.lcs(leftTexts[row], rightTexts[row]);
-
+                String result = this.lcs(leftTexts.get(row), rightTexts.get(row));
+                System.out.println(result);
                 // 왼쪽 파일 텍스트의 한 줄과 결과 값 비교 시작!
-                for (int i = 0, address = 0; i < leftTexts[row].length(); i++) {
-                    if (result.charAt(address) != leftTexts[row].charAt(i)) {
+                for (int i = 0, address = 0; i < leftTexts.get(row).length(); i++) {
+                    if (result.charAt(address) != leftTexts.get(row).charAt(i)) {
                         // 글자가 일치하지 않으면, 색칠
                         ldoc.setCharacterAttributes(prevLeftAddress + i, 1, attrs, true);
                     } else { // 일치하면 다음 어드레스로 넘김
@@ -105,8 +111,8 @@ public class Model {
 
                 // 오른쪽 파일 텍스트의 한 줄과 결과 값을 비교하며
                 // 과정은 위와 똑같다.
-                for (int i = 0, address = 0; i < rightTexts[row].length(); i++) {
-                    if (result.charAt(address) != rightTexts[row].charAt(i)) {
+                for (int i = 0, address = 0; i < rightTexts.get(row).length(); i++) {
+                    if (result.charAt(address) != rightTexts.get(row).charAt(i)) {
                         rdoc.setCharacterAttributes(prevRightAddress + i, 1, attrs, true);
                     } else {
                         address++;
@@ -116,96 +122,59 @@ public class Model {
                 // 가장 마지막 위치의 어드레스를 기준으로 다음 어드레스를 저장한다.
                 // 이들을 저장하는 이유는, 색칠할 때 오프셋으로 적용시킬 것이기 때문이다.
                 // 제이텍스트판에 사용될 도큐먼트의 오프셋이 첫줄부터 끝줄까지 연속되기 때문.
-                prevLeftAddress += leftTexts[row].length() + 1;
-                prevRightAddress += rightTexts[row].length() + 1;
+                prevLeftAddress += leftTexts.get(row).length() + 1;
+                prevRightAddress += rightTexts.get(row).length() + 1;
             }
         }
     }
-
-    private String lPath = "";
-    private String rPath = "";
 
     public void clearColor(String name) {
         if ( name.equals("Left") ) {
             StyledDocument ldoc = txtLeftPane.getStyledDocument();
             StyleContext sc = StyleContext.getDefaultStyleContext();
-            AttributeSet attrs = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Background, Color.YELLOW);
+            AttributeSet attrs = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Background, Color.WHITE);
             ldoc.setCharacterAttributes(0, txtLeftPane.getText().length(), attrs, true);
         } else if ( name.equals("Right") ) {
             StyledDocument rdoc = txtRightPane.getStyledDocument();
             StyleContext sc = StyleContext.getDefaultStyleContext();
-            AttributeSet attrs = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Background, Color.YELLOW);
+            AttributeSet attrs = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Background, Color.WHITE);
             rdoc.setCharacterAttributes(0, txtRightPane.getText().length(), attrs, true);
         }
     }
 
     // 왼쪽 파일을 불러온다
-    public void setLeftFileContent() {
+    public void setFileContent(String target) {
         JFileChooser fileChooser = new JFileChooser();
         int returnVal = fileChooser.showOpenDialog(view.getFrame());
 
         if( returnVal == JFileChooser.APPROVE_OPTION) {
             //OPEN 버튼 누를 시
-            File file = fileChooser.getSelectedFile();
-            lPath = file.getPath();
-            view.getJTextField("txtLeftPath").setText(lPath);
+            if (target.equals("Left")) { // 왼쪽 패널에서 오픈 버튼 눌렀다
+                File file = fileChooser.getSelectedFile();
+                leftFileModel.setFilePath(file.getPath());
+                view.getJTextField("txtLeftPath").setText(leftFileModel.getFilePath());
 
-
-            // 파일의 한줄 한줄 모두를 읽어낸다.
-            try {
-                String l = "";
-                BufferedReader in = new BufferedReader(new FileReader(lPath));
-
-                clearColor("Left");
                 txtLeftPane.setText("");
+                clearColor("Left");
+                leftFileModel.setLines();
 
-                while (l != null) {
-                    l = in.readLine();
-                    if (l != null) txtLeftPane.setText(txtLeftPane.getText() + l + "\n");
+                for (int i = 0; i < leftFileModel.getLines().size(); i++) {
+                    txtLeftPane.setText(txtLeftPane.getText() + leftFileModel.getLines().get(i));
+                    if (i != leftFileModel.getLines().size() - 1) txtLeftPane.setText(txtLeftPane.getText() + '\n');
                 }
+            } else if (target.equals("Right") ) { // 오른쪽 패널에서 오픈 버튼 눌렀다
+                File file = fileChooser.getSelectedFile();
+                rightFileModel.setFilePath(file.getPath());
+                view.getJTextField("txtRightPath").setText(rightFileModel.getFilePath());
 
-                // 마지막 줄에서 생긴 라인브레이크 제거
-                int lastLineBreak = txtLeftPane.getDocument().getText(0, txtLeftPane.getDocument().getLength()).lastIndexOf('\n');
-                txtLeftPane.getDocument().remove(lastLineBreak, txtLeftPane.getDocument().getLength() - lastLineBreak);
-                in.close();
-            } catch (Exception iox) {
-                iox.printStackTrace();
-            }
-        }
-    }
-
-
-    // 오른쪽 파일을 불러온다.
-    // 읽는 과정 등 모든 것이 왼쪽 파일 불러오는 메소드와 똑같다.
-    public void setRightFileContent() {
-        JFileChooser fileChooser = new JFileChooser();
-        int returnVal = fileChooser.showOpenDialog(view.getFrame());
-
-        if( returnVal == JFileChooser.APPROVE_OPTION) {
-            //OPEN 버튼 누를 시
-            File file = fileChooser.getSelectedFile();
-            rPath = file.getPath();
-            view.getJTextField("txtRightPath").setText(rPath);
-
-
-            try {
-                String l = "";
-                BufferedReader in = new BufferedReader(new FileReader(rPath));
-
-                clearColor("Right");
                 txtRightPane.setText("");
+                clearColor("Right");
+                rightFileModel.setLines();
 
-                while (l != null) {
-                    l = in.readLine();
-                    if (l != null) txtRightPane.setText(txtRightPane.getText() + l + "\n");
+                for (int i = 0; i < rightFileModel.getLines().size(); i++) {
+                    txtRightPane.setText(txtRightPane.getText() + rightFileModel.getLines().get(i));
+                    if (i != rightFileModel.getLines().size() - 1) txtRightPane.setText(txtRightPane.getText() + '\n');
                 }
-
-                int lastLineBreak = txtRightPane.getDocument().getText(0, txtRightPane.getDocument().getLength()).lastIndexOf('\n');
-                txtRightPane.getDocument().remove(lastLineBreak, txtRightPane.getDocument().getLength() - lastLineBreak);
-
-                in.close();
-            } catch (Exception iox) {
-                iox.printStackTrace();
             }
         }
     }
