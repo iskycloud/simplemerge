@@ -15,6 +15,11 @@ public class ScrollTextPane extends JScrollPane {
 
     private void initialize() {
         super.setViewportView(txtPane);
+        setEditable(false);
+    }
+
+    public void setEditable(boolean b) {
+        txtPane.setEditable(b);
     }
 
     public JTextPane getJTextPane() {

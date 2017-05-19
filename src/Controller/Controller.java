@@ -41,6 +41,10 @@ public class Controller implements ActionListener
         } else if (actionName.equals("btnCompare")) {
             // 비교 버튼 시
             model.diffModel.textCompare();
+        } else if (actionName.equals("btnLeftEdit")) {
+            view.getFileTextPane("Left").getScrollTextPane().setEditable(true);
+        } else if (actionName.equals("btnRightEdit")) {
+            view.getFileTextPane("Right").getScrollTextPane().setEditable(true);
         }
     }
 }
