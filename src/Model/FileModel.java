@@ -57,7 +57,7 @@ public class FileModel {
     // 새로운 어레이리스트로 읽음.
     public void setLines(JTextPane jp) {
         String[] tmpLines = jp.getText().split("\n");
-        lines = new ArrayList<Line>();
+        lines.clear();
         for(int i = 0; i < tmpLines.length; i++) {
             lines.add(new Line(tmpLines[i], 0));
         }
@@ -111,6 +111,8 @@ public class FileModel {
     public void setFileContent(View v) {
         JFileChooser fileChooser = new JFileChooser();
         int returnVal = fileChooser.showOpenDialog(v.getFrame());
+
+        lines.clear();
 
         if( returnVal == JFileChooser.APPROVE_OPTION) {
             //OPEN 버튼 누를 시

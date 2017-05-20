@@ -43,6 +43,8 @@ public class ScrollTextPane extends JScrollPane {
     }
 
     public void printCompare(ArrayList<Line> lines) {
+        clearColor();
+
         // 텍스트판에 적용시킬 스타일. 컬러 적용에 사용됨.
         StyledDocument sDoc = txtPane.getStyledDocument();
         StyleContext sc = StyleContext.getDefaultStyleContext();

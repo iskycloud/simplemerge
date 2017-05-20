@@ -53,29 +53,6 @@ public class Controller implements ActionListener
             model.setFileContent(view, View.TARGET_RIGHT);
             view.getFileTextPane(View.TARGET_RIGHT).loadFile(model.getFileModel(Model.RIGHT));
             view.getFileTextPane(View.TARGET_RIGHT).setStatusText("불러오기 완료 / 읽기 전용");
-        } else if (actionName.equals(Controller.BTN_COMPARE)) {
-            // 비교 버튼 클릭 시
-            // 만약 둘 다 편집 상태가 아닐 경우 비교 수행
-            if ( !view.getFileTextPane(View.TARGET_LEFT).getEditable() && !view.getFileTextPane(View.TARGET_LEFT).getEditable() ) {
-                model.textCompare();
-                view.printCompare(model.getDiffModel());
-            } else { // 아니면 메세지를 띄어줌.
-                view.showMessage("편집 상태인 문서가 있습니다. \n편집 아이콘을 한번 더 눌러 편집을 완료하세요.", "WARNING", JOptionPane.WARNING_MESSAGE);
-            }
-        } else if (actionName.equals(Controller.BTN_LEFT_EDIT)) {
-            // 왼쪽 패널 편집 버튼 클릭 시
-            if ( model.leftFileModel.isFileLoaded() ) {
-                if (view.getFileTextPane(View.TARGET_LEFT).getEditable()) {
-                    view.getFileTextPane(View.TARGET_LEFT).setEditable(false);
-                    model.leftFileModel.setLines(view.getFileTextPane(View.TARGET_LEFT).getScrollTextPane().getJTextPane());
-                    view.getFileTextPane(View.TARGET_LEFT).setStatusText("편집 완료");
-                } else {
-                    view.getFileTextPane(View.TARGET_LEFT).setEditable(true);
-                    view.getFileTextPane(View.TARGET_LEFT).setStatusText("편집 가능");
-                }
-            } else {
-                view.showMessage("먼저 파일을 불러오십시오.", "WARNING", JOptionPane.WARNING_MESSAGE);
-            }
         } else if (actionName.equals(Controller.BTN_LEFT_SAVE)) {
             // 왼쪽 패널 편집 버튼 클릭 시
             if ( model.leftFileModel.isFileLoaded() ) {
@@ -100,6 +77,20 @@ public class Controller implements ActionListener
             } else {
                 view.showMessage("먼저 파일을 불러오십시오.", "WARNING", JOptionPane.WARNING_MESSAGE);
             }
+        } else if (actionName.equals(Controller.BTN_LEFT_EDIT)) {
+            // 왼쪽 패널 편집 버튼 클릭 시
+            if ( model.leftFileModel.isFileLoaded() ) {
+                if (view.getFileTextPane(View.TARGET_LEFT).getEditable()) {
+                    view.getFileTextPane(View.TARGET_LEFT).setEditable(false);
+                    model.leftFileModel.setLines(view.getFileTextPane(View.TARGET_LEFT).getScrollTextPane().getJTextPane());
+                    view.getFileTextPane(View.TARGET_LEFT).setStatusText("편집 완료");
+                } else {
+                    view.getFileTextPane(View.TARGET_LEFT).setEditable(true);
+                    view.getFileTextPane(View.TARGET_LEFT).setStatusText("편집 가능");
+                }
+            } else {
+                view.showMessage("먼저 파일을 불러오십시오.", "WARNING", JOptionPane.WARNING_MESSAGE);
+            }
         } else if (actionName.equals(Controller.BTN_RIGHT_EDIT)) {
             // 오른쪽 패널 편집 버튼 클릭 시
             if ( model.rightFileModel.isFileLoaded() ) {
@@ -113,6 +104,15 @@ public class Controller implements ActionListener
                 }
             } else {
                 view.showMessage("먼저 파일을 불러오십시오.", "WARNING", JOptionPane.WARNING_MESSAGE);
+            }
+        } else if (actionName.equals(Controller.BTN_COMPARE)) {
+            // 비교 버튼 클릭 시
+            // 만약 둘 다 편집 상태가 아닐 경우 비교 수행
+            if ( !view.getFileTextPane(View.TARGET_LEFT).getEditable() && !view.getFileTextPane(View.TARGET_RIGHT).getEditable() ) {
+                model.textCompare();
+                view.printCompare(model.getDiffModel());
+            } else { // 아니면 메세지를 띄어줌.
+                view.showMessage("편집 상태인 문서가 있습니다. \n편집 아이콘을 한번 더 눌러 편집을 완료하세요.", "WARNING", JOptionPane.WARNING_MESSAGE);
             }
         }
     }
