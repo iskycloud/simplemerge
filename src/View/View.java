@@ -4,12 +4,16 @@
 
 package View;
 
+import Controller.Controller;
 import Model.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class View {
+    public static String TARGET_LEFT = "Left";
+    public static String TARGET_RIGHT = "Right";
+
     private JFrame frmMain;
     private JPanel frmBodyPane, westPane, eastPane;
     private FileTextPane leftFilePane, rightFilePane;
@@ -76,15 +80,21 @@ public class View {
     }
 
     public ScrollTextPane getScrollTextPane(String name) {
-        if ( name.equals("Left") ) return this.leftFilePane.getScrollTextPane();
-        else if ( name.equals("Right") ) return this.rightFilePane.getScrollTextPane();
+        if ( name.equals(View.TARGET_LEFT) ) return this.leftFilePane.getScrollTextPane();
+        else if ( name.equals(View.TARGET_RIGHT) ) return this.rightFilePane.getScrollTextPane();
         return null;
     }
 
     public FileTextPane getFileTextPane(String name) {
-        if ( name.equals("Left") ) return this.leftFilePane;
-        else if ( name.equals("Right") ) return this.rightFilePane;
+        if ( name.equals(View.TARGET_LEFT) ) return this.leftFilePane;
+        else if ( name.equals(View.TARGET_RIGHT) ) return this.rightFilePane;
         return null;
+    }
+
+    // JFrame에 메시지 다이어로그를 띄움
+    // 인자는 이름, 내용, 메시지 타입으로 받는다.
+    public void showMessage(String text, String name, int type) {
+        JOptionPane.showMessageDialog(this.frmMain, text, name, type);
     }
 
     // 버튼들에 대한 액션리스너를 컨트롤러에 추가시킨다.
@@ -92,30 +102,30 @@ public class View {
     // 나중에 발생하는 이벤트들을 구별하기 위함임.
     public void setActionListener(ActionListener al) {
         try {
-            leftFilePane.getButton("Load").addActionListener(al);
-            leftFilePane.getButton("Load").setName("btnLeftLoad");
-            leftFilePane.getButton("Save").addActionListener(al);
-            leftFilePane.getButton("Save").setName("btnLeftSave");
-            leftFilePane.getButton("Edit").addActionListener(al);
-            leftFilePane.getButton("Edit").setName("btnLeftEdit");
+            leftFilePane.getButton(FileTextPane.BTN_LOAD).addActionListener(al);
+            leftFilePane.getButton(FileTextPane.BTN_LOAD).setName(Controller.BTN_LEFT_LOAD);
+            leftFilePane.getButton(FileTextPane.BTN_SAVE).addActionListener(al);
+            leftFilePane.getButton(FileTextPane.BTN_SAVE).setName(Controller.BTN_LEFT_SAVE);
+            leftFilePane.getButton(FileTextPane.BTN_EDIT).addActionListener(al);
+            leftFilePane.getButton(FileTextPane.BTN_EDIT).setName(Controller.BTN_LEFT_EDIT);
 
-            rightFilePane.getButton("Load").addActionListener(al);
-            rightFilePane.getButton("Load").setName("btnRightLoad");
-            rightFilePane.getButton("Save").addActionListener(al);
-            rightFilePane.getButton("Save").setName("btnRightSave");
-            rightFilePane.getButton("Edit").addActionListener(al);
-            rightFilePane.getButton("Edit").setName("btnRightEdit");
+            rightFilePane.getButton(FileTextPane.BTN_LOAD).addActionListener(al);
+            rightFilePane.getButton(FileTextPane.BTN_LOAD).setName(Controller.BTN_RIGHT_LOAD);
+            rightFilePane.getButton(FileTextPane.BTN_SAVE).addActionListener(al);
+            rightFilePane.getButton(FileTextPane.BTN_SAVE).setName(Controller.BTN_RIGHT_SAVE);
+            rightFilePane.getButton(FileTextPane.BTN_EDIT).addActionListener(al);
+            rightFilePane.getButton(FileTextPane.BTN_EDIT).setName(Controller.BTN_RIGHT_EDIT);
 
-            ctlPane.getButton("Compare").addActionListener(al);
-            ctlPane.getButton("Compare").setName("btnCompare");
-            ctlPane.getButton("bMLTR").addActionListener(al);
-            ctlPane.getButton("bMLTR").setName("btnMergeLeftToRight");
-            ctlPane.getButton("bMLTRA").addActionListener(al);
-            ctlPane.getButton("bMLTRA").setName("btnMergeLeftToRightAll");
-            ctlPane.getButton("bMRTL").addActionListener(al);
-            ctlPane.getButton("bMRTL").setName("btnMergeRightToLeft");
-            ctlPane.getButton("bMRTLA").addActionListener(al);
-            ctlPane.getButton("bMRTLA").setName("btnMergeRightToLeftAll");
+            ctlPane.getButton(ControlPane.BTN_COMPARE).addActionListener(al);
+            ctlPane.getButton(ControlPane.BTN_COMPARE).setName(Controller.BTN_COMPARE);
+            ctlPane.getButton(ControlPane.BTN_MERGE_LEFT_TO_RIGHT).addActionListener(al);
+            ctlPane.getButton(ControlPane.BTN_MERGE_LEFT_TO_RIGHT).setName(Controller.BTN_MERGE_LEFT_TO_RIGHT);
+            ctlPane.getButton(ControlPane.BTN_MERGE_LEFT_TO_RIGHT_ALL).addActionListener(al);
+            ctlPane.getButton(ControlPane.BTN_MERGE_LEFT_TO_RIGHT_ALL).setName(Controller.BTN_MERGE_LEFT_TO_RIGHT_ALL);
+            ctlPane.getButton(ControlPane.BTN_MERGE_RIGHT_TO_LEFT).addActionListener(al);
+            ctlPane.getButton(ControlPane.BTN_MERGE_RIGHT_TO_LEFT).setName(Controller.BTN_MERGE_RIGHT_TO_LEFT);
+            ctlPane.getButton(ControlPane.BTN_MERGE_RIGHT_TO_LEFT_ALL).addActionListener(al);
+            ctlPane.getButton(ControlPane.BTN_MERGE_RIGHT_TO_LEFT_ALL).setName(Controller.BTN_MERGE_RIGHT_TO_LEFT_ALL);
         } catch ( NullPointerException e ) {
             e.printStackTrace();
         }
@@ -123,7 +133,7 @@ public class View {
 
     // 비교한 결과에 대한 글자 배경 색칠
     public void printCompare(DiffModel dm) {
-        leftFilePane.getScrollTextPane().printCompare(dm.getLines("Left"));
-        rightFilePane.getScrollTextPane().printCompare(dm.getLines("Right"));
+        leftFilePane.getScrollTextPane().printCompare(dm.getLines(Model.LEFT));
+        rightFilePane.getScrollTextPane().printCompare(dm.getLines(Model.RIGHT));
     }
 }

@@ -68,7 +68,7 @@ public class DiffModel {
     // 텍스트 비교 메소드
     public void textCompare() {
         // 둘다 파일 경로가 올바른지?
-        if ( leftFileModel.getFilePath().compareTo("") != 0 && rightFileModel.getFilePath().compareTo("") != 0 ) {
+        if ( leftFileModel.isFileLoaded() && rightFileModel.isFileLoaded() ) {
             // 텍스트를 한 줄 단위로 스트링 배열에 저장한다.
             ArrayList<Line> leftTexts, rightTexts;
             leftTexts = leftFileModel.getLines();

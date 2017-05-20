@@ -9,6 +9,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class FileTextPane extends JPanel {
+    public static String BTN_LOAD = "Load";
+    public static String BTN_SAVE = "Save";
+    public static String BTN_EDIT = "Edit";
+
     /* 상수 :  아이콘 */
     private final static Icon ICON_LOAD = new ImageIcon("./img/load.png");
     private final static Icon ICON_SAVE = new ImageIcon("./img/save.png");
@@ -75,12 +79,6 @@ public class FileTextPane extends JPanel {
         fileMenuPane.add(btnEdit, 2);
     }
 
-    public JTextField getJTextField(String name) {
-        if ( name.equals("txtPath") ) return this.txtPath;
-        else if ( name.equals("txtStatus") ) return this.txtStatus;
-        return null;
-    }
-
     public ScrollTextPane getScrollTextPane() {
         return this.scrTxtPane;
     }
@@ -102,26 +100,32 @@ public class FileTextPane extends JPanel {
         return scrTxtPane.getJTextPane().isEditable();
     }
 
+    // txtStatus 텍스트필드의 내용물을 수정할 수 있게 하는 메소드.
+    public void setStatusText(String text) {
+        txtStatus.setText(text);
+    }
+
+    // 편집 가능 여부 설정.
     public void setEditable(boolean b) {
         scrTxtPane.getJTextPane().setEditable(b);
 
         if (b) {
             // 편집 가능
             btnEdit.setIcon(ICON_EDITING);
-            txtStatus.setText("편집 가능");
+            //setStatusText("편집 가능");
         }
         else {
             // 읽기 전용
             btnEdit.setIcon(ICON_EDIT);
-            txtStatus.setText("읽기 전용");
+            //setStatusText("읽기 전용");
         }
     }
     public JButton getButton(String name) {
-        if ( name.equals("Load") ) {
+        if ( name.equals(FileTextPane.BTN_LOAD) ) {
             return this.btnLoad;
-        } else if ( name.equals("Save") ) {
+        } else if ( name.equals(FileTextPane.BTN_SAVE) ) {
             return this.btnSave;
-        } else if ( name.equals("Edit") ) {
+        } else if ( name.equals(FileTextPane.BTN_EDIT) ) {
             return this.btnEdit;
         }
         return null;

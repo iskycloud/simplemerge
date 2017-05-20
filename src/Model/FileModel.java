@@ -1,10 +1,7 @@
 package Model;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 import View.View;
@@ -39,7 +36,7 @@ public class FileModel {
 
     // 파일로부터 줄 읽어오는 작업.
     // 어레이리스트에 저장된다!
-    public void setLines() {
+    public void loadLines() {
         try {
             String l = "";
             BufferedReader in = new BufferedReader(new FileReader(filePath));
@@ -51,6 +48,40 @@ public class FileModel {
             }
 
             in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 편집 후의 텍스트판을 가져와
+    // 새로운 어레이리스트로 읽음.
+    public void setLines(JTextPane jp) {
+        String[] tmpLines = jp.getText().split("\n");
+        lines = new ArrayList<Line>();
+        for(int i = 0; i < tmpLines.length; i++) {
+            lines.add(new Line(tmpLines[i], 0));
+        }
+    }
+
+    // 파일이 로드되었는지?
+    public boolean isFileLoaded() {
+        if ( getFilePath().compareTo("") != 0 ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void saveLines() {
+        try {
+            BufferedWriter out = new BufferedWriter(new FileWriter(filePath));
+            for (int i = 0; i < lines.size(); i++) {
+                out.write(lines.get(i).toString());
+                if ( i != lines.size()-1) out.newLine();
+                out.flush();
+            }
+
+            out.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -85,7 +116,7 @@ public class FileModel {
             //OPEN 버튼 누를 시
             File file = fileChooser.getSelectedFile();
             this.setFilePath(file.getPath());
-            this.setLines();
+            this.loadLines();
         }
     }
 }
