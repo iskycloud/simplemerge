@@ -9,7 +9,7 @@ import Model.*;
 public class SimpleMerge {
     public static void main(String[] args) {
         View view = new View();
-        Model model = new Model(view);
+        Model model = new Model();
         Controller controller = new Controller(model, view);
         // 모델 -> 컨트롤러에 연동 예정
     }

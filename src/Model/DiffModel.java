@@ -4,30 +4,24 @@
 
 package Model;
 
-import javax.swing.*;
-import javax.swing.text.*;
-import java.awt.*;
-import java.io.File;
 import java.util.ArrayList;
 
-import View.View;
+public class DiffModel {
+    private FileModel leftFileModel, rightFileModel;
 
-public class DiffModel extends Model {
-
-    private View view;
-    private JTextPane txtLeftPane, txtRightPane;
-
-    public DiffModel() {
-
+    public DiffModel(FileModel leftFM, FileModel rightFM) {
+        leftFileModel = leftFM;
+        rightFileModel = rightFM;
     }
 
-    public DiffModel(View view) {
-        this.view = view;
-        this.txtLeftPane = view.getScrollTextPane(Model.LEFT).getJTextPane();
-        this.txtRightPane = view.getScrollTextPane(Model.RIGHT).getJTextPane();
-
-        leftFileModel = new FileModel(Model.LEFT);
-        rightFileModel = new FileModel(Model.RIGHT);
+    public ArrayList<Line> getLines(String s) {
+        if (s.equals(Model.LEFT)) {
+            return leftFileModel.getLines();
+        }
+        else if (s.equals(Model.RIGHT)) {
+            return rightFileModel.getLines();
+        }
+        return null; //TODO Exception
     }
 
     // LCS 알고리즘
@@ -76,30 +70,29 @@ public class DiffModel extends Model {
         // 둘다 파일 경로가 올바른지?
         if ( leftFileModel.getFilePath().compareTo("") != 0 && rightFileModel.getFilePath().compareTo("") != 0 ) {
             // 텍스트를 한 줄 단위로 스트링 배열에 저장한다.
-            ArrayList<String> leftTexts, rightTexts;
+            ArrayList<Line> leftTexts, rightTexts;
             leftTexts = leftFileModel.getLines();
             rightTexts = rightFileModel.getLines();
 
-            clearColor(Model.LEFT);
-            clearColor(Model.RIGHT);
-
-            // 텍스트판에 적용시킬 스타일. 컬러 적용에 사용됨.
-            StyledDocument ldoc = txtLeftPane.getStyledDocument(), rdoc = txtRightPane.getStyledDocument();
-            StyleContext sc = StyleContext.getDefaultStyleContext();
             int prevLeftAddress = 0, prevRightAddress = 0;
-            AttributeSet attrs = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Background, Color.YELLOW);
 
             // 왼쪽 파일 텍스트를 기준점으로 잡고, 열 단위로 lcs를 수행한다.
             for(int row = 0; row < leftTexts.size(); row++ ) {
                 // 왼쪽 파일 텍스트와 오른쪽 파일 텍스트 (각각 한줄 씩)에 대해 lcs를 수행한다
                 // 결과값은 스트링에 저장되며, 이는 색칠 과정에 사용될 것임.
-                String result = this.lcs(leftTexts.get(row), rightTexts.get(row));
+                String result = this.lcs(leftTexts.get(row).toString(), rightTexts.get(row).toString());
                 System.out.println(result);
+
+                // 다른 글자를 담는 ArrayList 초기화
+                leftTexts.get(row).initDiffCharSet();
+                rightTexts.get(row).initDiffCharSet();
+
                 // 왼쪽 파일 텍스트의 한 줄과 결과 값 비교 시작!
-                for (int i = 0, address = 0; i < leftTexts.get(row).length(); i++) {
-                    if (result.charAt(address) != leftTexts.get(row).charAt(i)) {
-                        // 글자가 일치하지 않으면, 색칠
-                        ldoc.setCharacterAttributes(prevLeftAddress + i, 1, attrs, true);
+                for (int i = 0, address = 0; i < leftTexts.get(row).toString().length() && address < result.length(); i++) {
+                    if (result.charAt(address) != leftTexts.get(row).toString().charAt(i)) {
+                        // 글자가 일치하지 않으면, 추가
+                        leftTexts.get(row).setState(1);
+                        leftTexts.get(row).getDiffCharSet().add(prevLeftAddress + i);
                     } else { // 일치하면 다음 어드레스로 넘김
                         address++;
                     }
@@ -107,9 +100,10 @@ public class DiffModel extends Model {
 
                 // 오른쪽 파일 텍스트의 한 줄과 결과 값을 비교하며
                 // 과정은 위와 똑같다.
-                for (int i = 0, address = 0; i < rightTexts.get(row).length(); i++) {
-                    if (result.charAt(address) != rightTexts.get(row).charAt(i)) {
-                        rdoc.setCharacterAttributes(prevRightAddress + i, 1, attrs, true);
+                for (int i = 0, address = 0; i < rightTexts.get(row).toString().length() && address < result.length(); i++) {
+                    if (result.charAt(address) != rightTexts.get(row).toString().charAt(i)) {
+                        rightTexts.get(row).setState(1);
+                        rightTexts.get(row).getDiffCharSet().add(prevRightAddress + i);
                     } else {
                         address++;
                     }
@@ -118,62 +112,9 @@ public class DiffModel extends Model {
                 // 가장 마지막 위치의 어드레스를 기준으로 다음 어드레스를 저장한다.
                 // 이들을 저장하는 이유는, 색칠할 때 오프셋으로 적용시킬 것이기 때문이다.
                 // 제이텍스트판에 사용될 도큐먼트의 오프셋이 첫줄부터 끝줄까지 연속되기 때문.
-                prevLeftAddress += leftTexts.get(row).length() + 1;
-                prevRightAddress += rightTexts.get(row).length() + 1;
+                prevLeftAddress += leftTexts.get(row).toString().length() + 1;
+                prevRightAddress += rightTexts.get(row).toString().length() + 1;
             }
         }
     }
-
-    // 모든 색을 제거해줌 = 초기화
-    public void clearColor(String name) {
-        if ( name.equals(Model.LEFT) ) {
-            StyledDocument ldoc = txtLeftPane.getStyledDocument();
-            StyleContext sc = StyleContext.getDefaultStyleContext();
-            AttributeSet attrs = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Background, Color.WHITE);
-            ldoc.setCharacterAttributes(0, txtLeftPane.getText().length(), attrs, true);
-        } else if ( name.equals(Model.RIGHT) ) {
-            StyledDocument rdoc = txtRightPane.getStyledDocument();
-            StyleContext sc = StyleContext.getDefaultStyleContext();
-            AttributeSet attrs = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Background, Color.WHITE);
-            rdoc.setCharacterAttributes(0, txtRightPane.getText().length(), attrs, true);
-        }
-    }
-
-    // 왼쪽 파일을 불러온다
-    public void setFileContent(String target) {
-        JFileChooser fileChooser = new JFileChooser();
-        int returnVal = fileChooser.showOpenDialog(view.getFrame());
-
-        if( returnVal == JFileChooser.APPROVE_OPTION) {
-            //OPEN 버튼 누를 시
-            if (target.equals(Model.LEFT)) { // 왼쪽 패널에서 오픈 버튼 눌렀다
-                File file = fileChooser.getSelectedFile();
-                leftFileModel.setFilePath(file.getPath());
-                view.getFileTextPane(Model.LEFT).getJTextField("txtPath").setText(leftFileModel.getFilePath());
-
-                txtLeftPane.setText("");
-                clearColor(Model.LEFT);
-                leftFileModel.setLines();
-
-                for (int i = 0; i < leftFileModel.getLines().size(); i++) {
-                    txtLeftPane.setText(txtLeftPane.getText() + leftFileModel.getLines().get(i));
-                    if (i != leftFileModel.getLines().size() - 1) txtLeftPane.setText(txtLeftPane.getText() + '\n');
-                }
-            } else if (target.equals(Model.RIGHT) ) { // 오른쪽 패널에서 오픈 버튼 눌렀다
-                File file = fileChooser.getSelectedFile();
-                rightFileModel.setFilePath(file.getPath());
-                view.getFileTextPane(Model.RIGHT).getJTextField("txtPath").setText(rightFileModel.getFilePath());
-
-                txtRightPane.setText("");
-                clearColor(Model.RIGHT);
-                rightFileModel.setLines();
-
-                for (int i = 0; i < rightFileModel.getLines().size(); i++) {
-                    txtRightPane.setText(txtRightPane.getText() + rightFileModel.getLines().get(i));
-                    if (i != rightFileModel.getLines().size() - 1) txtRightPane.setText(txtRightPane.getText() + '\n');
-                }
-            }
-        }
-    }
-
 }

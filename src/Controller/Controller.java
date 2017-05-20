@@ -32,19 +32,35 @@ public class Controller implements ActionListener
 
         int returnVal;
         if (actionName.equals("btnLeftLoad")) {
-            // 왼쪽 패널 로드 버튼일 시
-            model.diffModel.setFileContent("Left");
+            // 왼쪽 패널 로드 버튼 클릭 시
+            model.setFileContent(view, "Left");
+            view.getFileTextPane("Left").loadFile(model.getFileModel("Left"));
         }
         else if (actionName.equals("btnRightLoad")) {
-            // 오른쪽 패널 로드 버튼일 시
-            model.diffModel.setFileContent("Right");
+            // 오른쪽 패널 로드 버튼 클릭 시
+            model.setFileContent(view, "Right");
+            view.getFileTextPane("Right").loadFile(model.getFileModel("Right"));
         } else if (actionName.equals("btnCompare")) {
-            // 비교 버튼 시
-            model.diffModel.textCompare();
+            // 비교 버튼 클릭 시
+            model.textCompare();
+            view.printCompare(model.getDiffModel());
         } else if (actionName.equals("btnLeftEdit")) {
-            view.getFileTextPane("Left").getScrollTextPane().setEditable(true);
+            // 왼쪽 패널 편집 버튼 클릭 시
+            if (view.getFileTextPane("Left").getEditable()) {
+                view.getFileTextPane("Left").setEditable(false);
+            }
+            else {
+                view.getFileTextPane("Left").setEditable(true);
+            }
+            
         } else if (actionName.equals("btnRightEdit")) {
-            view.getFileTextPane("Right").getScrollTextPane().setEditable(true);
+            // 오른쪽 패널 편집 버튼 클릭 시
+            if (view.getFileTextPane("Right").getEditable()) {
+                view.getFileTextPane("Right").setEditable(false);
+            }
+            else {
+                view.getFileTextPane("Right").setEditable(true);
+            }
         }
     }
 }

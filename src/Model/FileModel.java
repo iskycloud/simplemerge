@@ -1,10 +1,13 @@
 package Model;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import View.View;
 
 /**
  * Created by xpathz on 2017. 5. 18..
@@ -12,21 +15,21 @@ import java.util.ArrayList;
 public class FileModel {
     private String target;
     private String filePath;
-    private ArrayList<String> lines;
+    private ArrayList<Line> lines;
 
     // 디폴트 컨스트럭터
     // 초기화 용도에 사용되는 정도.
     public FileModel() {
         this.target = "";
         this.filePath = "";
-        this.lines = new ArrayList<String>();
+        this.lines = new ArrayList<Line>();
     }
 
     // 타겟 이름을 파라미터로 가져오는 컨스트럭터
     public FileModel(String t) {
         this.target = t;
         this.filePath = "";
-        this.lines = new ArrayList<String>();
+        this.lines = new ArrayList<Line>();
     }
 
     // 파일 설정.
@@ -44,11 +47,11 @@ public class FileModel {
             while (l != null) {
                 l = in.readLine();
                 if (l == null) break;
-                lines.add(l);
+                lines.add(new Line(l, 0));
             }
 
             in.close();
-        } catch ( IOException e ) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -69,7 +72,20 @@ public class FileModel {
     }
 
     // 어레이리스트 가져오기.
-    public ArrayList<String> getLines() {
+    public ArrayList<Line> getLines() {
         return this.lines;
+    }
+
+    // 파일을 불러온다
+    public void setFileContent(View v) {
+        JFileChooser fileChooser = new JFileChooser();
+        int returnVal = fileChooser.showOpenDialog(v.getFrame());
+
+        if( returnVal == JFileChooser.APPROVE_OPTION) {
+            //OPEN 버튼 누를 시
+            File file = fileChooser.getSelectedFile();
+            this.setFilePath(file.getPath());
+            this.setLines();
+        }
     }
 }

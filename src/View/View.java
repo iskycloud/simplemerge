@@ -4,6 +4,7 @@
 
 package View;
 
+import Model.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -14,26 +15,29 @@ public class View {
     private FileTextPane leftFilePane, rightFilePane;
     private ControlPane ctlPane;
 
-/** Modification Required : LocationPane */
+/** TODO Implementation :  LocationPane */
 //  LocationPane
 
     public View() {
-        initFrmMain();
+        initBodyPane();
         initWestPane();
         initEastPane();
+        initFrmMain();
     }
 
     private void initFrmMain() {
+        frmMain.setTitle("SimpleMerge - Team 1"); //set the title of JFrame
+        frmMain.setSize(600, 500); //set the size of JFrame
+        frmMain.setLocationRelativeTo(null); //set the location of JFrame
+        frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //set the close option of JFrame
+        frmMain.setVisible(true); //set visible for this window
+    }
+
+    private void initBodyPane() {
         frmMain = new JFrame();
 
         frmBodyPane = new JPanel();
 
-        frmMain.setTitle("SimpleMerge - Team 1"); //set the title of JFrame
-        frmMain.setSize(600, 400); //set the size of JFrame
-        frmMain.setLocationRelativeTo(null); //set the location of JFrame
-        frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //set the close option of JFrame
-        frmMain.setVisible(true); //set visible for this window
-        
         frmBodyPane.setLayout(new GridLayout(1, 2));
 
         frmMain.add(frmBodyPane);
@@ -42,13 +46,13 @@ public class View {
     private void initWestPane() {
         westPane = new JPanel();
         leftFilePane = new FileTextPane();
-/** Modification Required : LocationPane */
+/** TODO Implementation :  LocationPane */
 //        LocationPane locPane = new JPanel();
 
         westPane.setLayout(new BorderLayout());
 
         frmBodyPane.add(westPane, 0);
-/** Modification Required : LocationPane */
+/** TODO Implementation :  LocationPane */
 //        westPane.add(locPane, BorderLayout.WEST);
         westPane.add(leftFilePane, BorderLayout.CENTER);
     }
@@ -71,7 +75,6 @@ public class View {
         return this.frmMain;
     }
 
-
     public ScrollTextPane getScrollTextPane(String name) {
         if ( name.equals("Left") ) return this.leftFilePane.getScrollTextPane();
         else if ( name.equals("Right") ) return this.rightFilePane.getScrollTextPane();
@@ -83,7 +86,6 @@ public class View {
         else if ( name.equals("Right") ) return this.rightFilePane;
         return null;
     }
-
 
     // 버튼들에 대한 액션리스너를 컨트롤러에 추가시킨다.
     // 그리고, 그 버튼들에 대해 이름을 설정해준다.
@@ -117,5 +119,11 @@ public class View {
         } catch ( NullPointerException e ) {
             e.printStackTrace();
         }
+    }
+
+    // 비교한 결과에 대한 글자 배경 색칠
+    public void printCompare(DiffModel dm) {
+        leftFilePane.getScrollTextPane().printCompare(dm.getLines("Left"));
+        rightFilePane.getScrollTextPane().printCompare(dm.getLines("Right"));
     }
 }

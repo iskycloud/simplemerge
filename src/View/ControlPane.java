@@ -15,14 +15,17 @@ public class ControlPane extends JPanel {
     }
 
     private void initialize() {
+        /** 버튼 객체 생성 */
         btnCompare = new JButton(new ImageIcon("./img/compare.png"));
         btnMergeLeftToRightAll = new JButton(new ImageIcon("./img/all_ltor.png"));
         btnMergeLeftToRight = new JButton(new ImageIcon("./img/ltor.png"));
         btnMergeRightToLeft = new JButton(new ImageIcon("./img/rtol.png"));
         btnMergeRightToLeftAll = new JButton(new ImageIcon("./img/all_rtol.png"));
 
+        /** 패널 레이아웃 설정 */
         super.setLayout(new GridLayout(5, 1));
 
+        /** 각 패널 레이아웃 설정 */
         super.add(btnCompare, 0);
         super.add(btnMergeLeftToRightAll, 1);
         super.add(btnMergeLeftToRight, 2);
