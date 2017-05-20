@@ -8,6 +8,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ControlPane extends JPanel {
+    public static String BTN_COMPARE = "Compare";
+    public static String BTN_MERGE_LEFT_TO_RIGHT_ALL = "bMLTRA";
+    public static String BTN_MERGE_LEFT_TO_RIGHT = "bMLTR";
+    public static String BTN_MERGE_RIGHT_TO_LEFT_ALL = "bMRTLA";
+    public static String BTN_MERGE_RIGHT_TO_LEFT = "bMRTL";
+
     private JButton btnCompare, btnMergeLeftToRightAll, btnMergeLeftToRight, btnMergeRightToLeft, btnMergeRightToLeftAll;
 
     ControlPane() {
@@ -34,11 +40,11 @@ public class ControlPane extends JPanel {
     }
 
     public JButton getButton(String name) {
-        if ( name.equals("Compare") ) return this.btnCompare;
-        else if ( name.equals("bMLTR") ) return this.btnMergeLeftToRight;
-        else if ( name.equals("bMLTRA") ) return this.btnMergeLeftToRightAll;
-        else if ( name.equals("bMRTLA") ) return this.btnMergeRightToLeftAll;
-        else if ( name.equals("bMRTL") ) return this.btnMergeRightToLeft;
+        if ( name.equals(ControlPane.BTN_COMPARE) ) return this.btnCompare;
+        else if ( name.equals(ControlPane.BTN_MERGE_LEFT_TO_RIGHT) ) return this.btnMergeLeftToRight;
+        else if ( name.equals(ControlPane.BTN_MERGE_LEFT_TO_RIGHT_ALL) ) return this.btnMergeLeftToRightAll;
+        else if ( name.equals(ControlPane.BTN_MERGE_RIGHT_TO_LEFT_ALL) ) return this.btnMergeRightToLeftAll;
+        else if ( name.equals(ControlPane.BTN_MERGE_RIGHT_TO_LEFT) ) return this.btnMergeRightToLeft;
         return null;
     }
 }
