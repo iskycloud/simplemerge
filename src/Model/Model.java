@@ -35,13 +35,15 @@ public class Model {
         return diffModel;
     }
 
-    public void setFileContent(View v, String s) {
+    public int setFileContent(View v, String s) {
+        int returnVal = -1;
         if (s.equals(LEFT)) {
-            leftFileModel.setFileContent(v);
+            returnVal = leftFileModel.setFileContent(v);
         }
         else if (s.equals(RIGHT)) {
-            rightFileModel.setFileContent(v);
+            returnVal = rightFileModel.setFileContent(v);
         }
+        return returnVal;
     }
 
     public void textCompare() {

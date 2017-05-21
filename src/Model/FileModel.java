@@ -108,17 +108,18 @@ public class FileModel {
     }
 
     // 파일을 불러온다
-    public void setFileContent(View v) {
+    public int setFileContent(View v) {
         JFileChooser fileChooser = new JFileChooser();
         int returnVal = fileChooser.showOpenDialog(v.getFrame());
 
-        lines.clear();
-
         if( returnVal == JFileChooser.APPROVE_OPTION) {
             //OPEN 버튼 누를 시
+            lines.clear();
             File file = fileChooser.getSelectedFile();
             this.setFilePath(file.getPath());
             this.loadLines();
         }
+
+        return returnVal;
     }
 }
