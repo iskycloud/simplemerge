@@ -87,13 +87,14 @@ public class FileTextPane extends JPanel {
         //View에 구현
         txtPath.setText(fm.getFilePath());
         scrTxtPane.getJTextPane().setText("");
-        scrTxtPane.clearColor();
         for (int i = 0; i < fm.getLines().size(); i++) {
             scrTxtPane.getJTextPane().setText(scrTxtPane.getJTextPane().getText() + fm.getLines().get(i));
             if (i != fm.getLines().size() - 1) {
                 scrTxtPane.getJTextPane().setText(scrTxtPane.getJTextPane().getText() + '\n');
             }
         }
+        //TODO : View.java에 양쪽 모두 초기화하는 것으로 수정했는데 추후 수정할 수 있으므로 잠시 둠.
+        //scrTxtPane.clearColor();
     }
 
     public boolean getEditable() {

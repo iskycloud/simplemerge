@@ -47,6 +47,7 @@ public class Controller implements ActionListener
             int returnVal = model.setFileContent(view, View.TARGET_LEFT);
             if ( returnVal == JFileChooser.APPROVE_OPTION ) {
                 view.getFileTextPane(View.TARGET_LEFT).loadFile(model.getFileModel(Model.LEFT));
+                view.clearColor();
                 view.getFileTextPane(View.TARGET_LEFT).setStatusText("불러오기 완료 / 읽기 전용");
             }
         }
@@ -55,6 +56,7 @@ public class Controller implements ActionListener
             int returnVal = model.setFileContent(view, View.TARGET_RIGHT);
             if ( returnVal == JFileChooser.APPROVE_OPTION ) {
                 view.getFileTextPane(View.TARGET_RIGHT).loadFile(model.getFileModel(Model.RIGHT));
+                view.clearColor();
                 view.getFileTextPane(View.TARGET_RIGHT).setStatusText("불러오기 완료 / 읽기 전용");
             }
         } else if (actionName.equals(Controller.BTN_LEFT_SAVE)) {
