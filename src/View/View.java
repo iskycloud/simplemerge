@@ -131,6 +131,11 @@ public class View {
         }
     }
 
+    public void clearColor() {
+        leftFilePane.getScrollTextPane().clearColor();
+        rightFilePane.getScrollTextPane().clearColor();
+    }
+
     // 비교한 결과에 대한 글자 배경 색칠
     public void printCompare(DiffModel dm) {
         leftFilePane.getScrollTextPane().printCompare(dm.getLines(Model.LEFT));

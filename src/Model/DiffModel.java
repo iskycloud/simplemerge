@@ -76,11 +76,13 @@ public class DiffModel {
 
             int prevLeftAddress = 0, prevRightAddress = 0;
 
+
             // 왼쪽 파일 텍스트를 기준점으로 잡고, 열 단위로 lcs를 수행한다.
             for(int row = 0; row < leftTexts.size(); row++ ) {
                 // 왼쪽 파일 텍스트와 오른쪽 파일 텍스트 (각각 한줄 씩)에 대해 lcs를 수행한다
                 // 결과값은 스트링에 저장되며, 이는 색칠 과정에 사용될 것임.
                 String result = this.lcs(leftTexts.get(row).toString(), rightTexts.get(row).toString());
+                int lastLeftAddress = 0, lastRightAddress = 0;
                 System.out.println(result);
 
                 // 다른 글자를 담는 ArrayList 초기화
@@ -94,6 +96,7 @@ public class DiffModel {
                         leftTexts.get(row).setState(1);
                         leftTexts.get(row).getDiffCharSet().add(prevLeftAddress + i);
                     } else { // 일치하면 다음 어드레스로 넘김
+                        lastLeftAddress = i;
                         address++;
                     }
                 }
@@ -106,6 +109,23 @@ public class DiffModel {
                         rightTexts.get(row).getDiffCharSet().add(prevRightAddress + i);
                     } else {
                         address++;
+                    }
+                    lastRightAddress = i;
+                }
+
+
+
+                if ( leftTexts.get(row).toString().length()-1 > lastLeftAddress ) {
+                    for (int i = lastLeftAddress+1; i < leftTexts.get(row).toString().length(); i++ ) {
+                        leftTexts.get(row).setState(1);
+                        leftTexts.get(row).getDiffCharSet().add(prevLeftAddress + i);
+                    }
+                }
+
+                if ( rightTexts.get(row).toString().length()-1 > lastRightAddress ) {
+                    for (int i = lastRightAddress+1; i < rightTexts.get(row).toString().length(); i++ ) {
+                        rightTexts.get(row).setState(1);
+                        rightTexts.get(row).getDiffCharSet().add(prevRightAddress + i);
                     }
                 }
 

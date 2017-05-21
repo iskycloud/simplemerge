@@ -44,15 +44,21 @@ public class Controller implements ActionListener
 
         if (actionName.equals(Controller.BTN_LEFT_LOAD)) {
             // 왼쪽 패널 로드 버튼 클릭 시
-            model.setFileContent(view, View.TARGET_LEFT);
-            view.getFileTextPane(View.TARGET_LEFT).loadFile(model.getFileModel(Model.LEFT));
-            view.getFileTextPane(View.TARGET_LEFT).setStatusText("불러오기 완료 / 읽기 전용");
+            int returnVal = model.setFileContent(view, View.TARGET_LEFT);
+            if ( returnVal == JFileChooser.APPROVE_OPTION ) {
+                view.getFileTextPane(View.TARGET_LEFT).loadFile(model.getFileModel(Model.LEFT));
+                view.clearColor();
+                view.getFileTextPane(View.TARGET_LEFT).setStatusText("불러오기 완료 / 읽기 전용");
+            }
         }
         else if (actionName.equals(Controller.BTN_RIGHT_LOAD)) {
             // 오른쪽 패널 로드 버튼 클릭 시
-            model.setFileContent(view, View.TARGET_RIGHT);
-            view.getFileTextPane(View.TARGET_RIGHT).loadFile(model.getFileModel(Model.RIGHT));
-            view.getFileTextPane(View.TARGET_RIGHT).setStatusText("불러오기 완료 / 읽기 전용");
+            int returnVal = model.setFileContent(view, View.TARGET_RIGHT);
+            if ( returnVal == JFileChooser.APPROVE_OPTION ) {
+                view.getFileTextPane(View.TARGET_RIGHT).loadFile(model.getFileModel(Model.RIGHT));
+                view.clearColor();
+                view.getFileTextPane(View.TARGET_RIGHT).setStatusText("불러오기 완료 / 읽기 전용");
+            }
         } else if (actionName.equals(Controller.BTN_LEFT_SAVE)) {
             // 왼쪽 패널 편집 버튼 클릭 시
             if ( model.leftFileModel.isFileLoaded() ) {
