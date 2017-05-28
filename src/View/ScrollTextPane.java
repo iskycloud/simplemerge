@@ -42,13 +42,27 @@ public class ScrollTextPane extends JScrollPane {
         ldoc.setCharacterAttributes(0, txtPane.getText().length(), attrs, true);
     }
 
+    // DiffBlock의 인덱스 어레이리스트를 가져오고, 인덱스 객체들을 이용하여 색 표현.
+    public void printCompare(ArrayList<Index> indexes) {
+
+        // 텍스트판에 적용시킬 스타일. 컬러 적용에 사용됨.
+        StyledDocument sDoc = txtPane.getStyledDocument();
+        StyleContext sc = StyleContext.getDefaultStyleContext();
+        AttributeSet attrs = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Background, COLOR_DIFF_STRING);
+
+        // 인덱스 객체들을 하나씩 불러와 시작 인덱스로부터 끝 인덱스까지 색칠.
+        for(int i = 0; i < indexes.size(); i++) {
+            sDoc.setCharacterAttributes(indexes.get(i).First(), indexes.get(i).Last() - indexes.get(i).First() + 1, attrs, true);
+        }
+    }
+
+    /*
     public void printCompare(ArrayList<Line> lines) {
         clearColor();
 
         // 텍스트판에 적용시킬 스타일. 컬러 적용에 사용됨.
         StyledDocument sDoc = txtPane.getStyledDocument();
         StyleContext sc = StyleContext.getDefaultStyleContext();
-        int prevLeftAddress = 0, prevRightAddress = 0;
         AttributeSet attrs = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Background, COLOR_DIFF_STRING);
 
         for (int row = 0; row < lines.size(); row++) {
@@ -62,6 +76,7 @@ public class ScrollTextPane extends JScrollPane {
             }
         }
     }
+    */
 }
 /*
 class LineHighlightTextPaneUI extends BasicTextPaneUI {

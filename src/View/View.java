@@ -15,6 +15,7 @@ public class View {
     public static String TARGET_RIGHT = "Right";
 
     private JFrame frmMain;
+    private LocationPane locPane;
     private JPanel frmBodyPane, westPane, eastPane;
     private FileTextPane leftFilePane, rightFilePane;
     private ControlPane ctlPane;
@@ -51,13 +52,15 @@ public class View {
         westPane = new JPanel();
         leftFilePane = new FileTextPane();
 /** TODO Implementation :  LocationPane */
-//        LocationPane locPane = new JPanel();
+//
+        // 로케이션 판 추가됨! 단, 현재는 임시로 텍스트에어리어들 둔 것임!!!!!
+        LocationPane locPane = new LocationPane();
 
         westPane.setLayout(new BorderLayout());
 
         frmBodyPane.add(westPane, 0);
 /** TODO Implementation :  LocationPane */
-//        westPane.add(locPane, BorderLayout.WEST);
+        westPane.add(locPane, BorderLayout.WEST);
         westPane.add(leftFilePane, BorderLayout.CENTER);
     }
 
@@ -138,7 +141,8 @@ public class View {
 
     // 비교한 결과에 대한 글자 배경 색칠
     public void printCompare(DiffModel dm) {
-        leftFilePane.getScrollTextPane().printCompare(dm.getLines(Model.LEFT));
-        rightFilePane.getScrollTextPane().printCompare(dm.getLines(Model.RIGHT));
+        clearColor();
+        leftFilePane.getScrollTextPane().printCompare(dm.getDiffBlock(Model.LEFT).getIndexes());
+        rightFilePane.getScrollTextPane().printCompare(dm.getDiffBlock(Model.RIGHT).getIndexes());
     }
 }

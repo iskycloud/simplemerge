@@ -7,19 +7,30 @@ package Model;
 import java.util.ArrayList;
 
 public class DiffModel {
+
     private FileModel leftFileModel, rightFileModel;
+    private DiffBlock leftDiffBlock, rightDiffBlock;
 
     public DiffModel(FileModel leftFM, FileModel rightFM) {
-        leftFileModel = leftFM;
-        rightFileModel = rightFM;
+        this.leftFileModel = leftFM;
+        this.rightFileModel = rightFM;
+        this.leftDiffBlock = new DiffBlock();
+        this.rightDiffBlock = new DiffBlock();
+    }
+
+    // 해당하는 DiffBlock 가져오기.
+    public DiffBlock getDiffBlock(String s) {
+        if ( s.equals(Model.LEFT) ) return leftDiffBlock;
+        else if ( s.equals(Model.RIGHT) ) return rightDiffBlock;
+        return null;
     }
 
     public ArrayList<Line> getLines(String s) {
         if (s.equals(Model.LEFT)) {
-            return leftFileModel.getLines();
+            return this.leftFileModel.getLines();
         }
         else if (s.equals(Model.RIGHT)) {
-            return rightFileModel.getLines();
+            return this.rightFileModel.getLines();
         }
         return null; //TODO Exception
     }
@@ -89,13 +100,20 @@ public class DiffModel {
                 leftTexts.get(row).initDiffCharSet();
                 rightTexts.get(row).initDiffCharSet();
 
+                int firstAddress = -1, lastAddress = -1;
                 // 왼쪽 파일 텍스트의 한 줄과 결과 값 비교 시작!
                 for (int i = 0, address = 0; i < leftTexts.get(row).toString().length() && address < result.length(); i++) {
                     if (result.charAt(address) != leftTexts.get(row).toString().charAt(i)) {
                         // 글자가 일치하지 않으면, 추가
                         leftTexts.get(row).setState(1);
                         leftTexts.get(row).getDiffCharSet().add(prevLeftAddress + i);
+                        if ( firstAddress == -1 ) { firstAddress = prevLeftAddress + i; }
                     } else { // 일치하면 다음 어드레스로 넘김
+                        if ( firstAddress != -1 && lastAddress == -1 ) {
+                            lastAddress = prevLeftAddress + i - 1;
+                            leftDiffBlock.getIndexes().add(new Index(firstAddress, lastAddress)); // 그리고 차이 부분을 계산하여 블록에 넣음
+                            firstAddress = -1; lastAddress = -1;
+                        }
                         lastLeftAddress = i;
                         address++;
                     }
@@ -105,21 +123,31 @@ public class DiffModel {
                 // 과정은 위와 똑같다.
                 for (int i = 0, address = 0; i < rightTexts.get(row).toString().length() && address < result.length(); i++) {
                     if (result.charAt(address) != rightTexts.get(row).toString().charAt(i)) {
+                        // 글자가 일치하지 않으면, 추가
                         rightTexts.get(row).setState(1);
                         rightTexts.get(row).getDiffCharSet().add(prevRightAddress + i);
-                    } else {
+                        if ( firstAddress == -1 ) { firstAddress = prevRightAddress + i; }
+                    } else { // 일치하면 다음 어드레스로 넘김
+                        if ( firstAddress != -1 && lastAddress == -1 ) {
+                            lastAddress = prevRightAddress + i - 1;
+                            rightDiffBlock.getIndexes().add(new Index(firstAddress, lastAddress)); // 그리고 차이 부분을 계산하여 블록에 넣음
+                            firstAddress = -1; lastAddress = -1;
+                        }
+                        lastRightAddress = i;
                         address++;
                     }
-                    lastRightAddress = i;
                 }
 
-
-
+                // 비교 결과 후, 이후의 텍스트들은 차이점임을 의미하므로, 이후의 텍스트들을 모두 결과에 포함시킴.
                 if ( leftTexts.get(row).toString().length()-1 > lastLeftAddress ) {
                     for (int i = lastLeftAddress+1; i < leftTexts.get(row).toString().length(); i++ ) {
                         leftTexts.get(row).setState(1);
-                        leftTexts.get(row).getDiffCharSet().add(prevLeftAddress + i);
+                        leftTexts.get(row).getDiffCharSet().add(prevLeftAddress +i);
                     }
+
+                    int startAddress = prevLeftAddress+lastLeftAddress+1;
+                    int finishAddress = prevLeftAddress+leftTexts.get(row).toString().length()-1;
+                    leftDiffBlock.getIndexes().add(new Index(startAddress, finishAddress));
                 }
 
                 if ( rightTexts.get(row).toString().length()-1 > lastRightAddress ) {
@@ -127,6 +155,10 @@ public class DiffModel {
                         rightTexts.get(row).setState(1);
                         rightTexts.get(row).getDiffCharSet().add(prevRightAddress + i);
                     }
+
+                    int startAddress = prevRightAddress+lastRightAddress+1;
+                    int finishAddress = prevRightAddress+rightTexts.get(row).toString().length()-1;
+                    rightDiffBlock.getIndexes().add(new Index(startAddress, finishAddress));
                 }
 
                 // 가장 마지막 위치의 어드레스를 기준으로 다음 어드레스를 저장한다.
