@@ -85,6 +85,9 @@ public class DiffModel {
             leftTexts = leftFileModel.getLines();
             rightTexts = rightFileModel.getLines();
 
+            leftDiffBlock.getIndexes().clear();
+            rightDiffBlock.getIndexes().clear();
+
             int prevLeftAddress = 0, prevRightAddress = 0;
 
 

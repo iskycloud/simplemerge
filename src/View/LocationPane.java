@@ -4,36 +4,30 @@ import Model.FileModel;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 
 /**
  * Created by xpathz on 2017. 5. 28..
  */
-public class LocationPane extends JPanel {
+public class LocationPane extends JComponent {
+    private int leftLineSize, rightLineSize; // 필요 있을지는 의문임
+    // 의도하고 있는건 비교할때마다 setState해둔거 이용할거임!
 
-    // 그냥 임시로 둔 것임!!!
-    // 아직 제이컴포넌트 안만듬!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     public LocationPane() {
-        JTextArea l = new JTextArea();
-        JTextArea r = new JTextArea();
-
-        Border border = BorderFactory.createLineBorder(Color.BLACK);
-        l.setBorder(BorderFactory.createCompoundBorder(border, BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-        r.setBorder(BorderFactory.createCompoundBorder(border, BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-
-        l.setColumns(2);
-        r.setColumns(2);
-        //l.setSize(new Dimension(3, 5));
-        this.setLayout(new GridLayout(1,2));
-        this.add(l);
-        this.add(r);
-
-        l.setEditable(false);
-        r.setEditable(false);
-        // do nothing.
+        this.setPreferredSize(new Dimension(56, getHeight()));
+        this.repaint();
     }
 
-    public void refresh() {
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.setColor(Color.BLACK);
+        g.fillRect(0,0,getWidth(), getHeight());
 
+        g.setColor(Color.WHITE);
+        g.fillRect(2,2,getWidth()-4, getHeight()-4);
+
+        g.setColor(Color.BLACK);
+        g.fillRect(27, 2, 2, getHeight());
     }
 }

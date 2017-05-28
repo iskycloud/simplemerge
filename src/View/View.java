@@ -54,7 +54,7 @@ public class View {
 /** TODO Implementation :  LocationPane */
 //
         // 로케이션 판 추가됨! 단, 현재는 임시로 텍스트에어리어들 둔 것임!!!!!
-        LocationPane locPane = new LocationPane();
+        locPane = new LocationPane();
 
         westPane.setLayout(new BorderLayout());
 
