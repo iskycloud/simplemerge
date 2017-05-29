@@ -76,6 +76,11 @@ public class View {
         eastPane.add(rightFilePane, BorderLayout.CENTER);
     }
 
+    public LocationPane getLocPane() { return locPane; }
+    public void setLocationPaneModels(FileModel left, FileModel right) {
+        locPane.setModel(left, right);
+    }
+
     // 현재 J프레임을 리턴해주는 메소드.
     // 주로 컨트롤러에서 창을 띄울 때 사용함.
     public JFrame getFrame() {

@@ -35,6 +35,8 @@ public class Controller implements ActionListener
     public Controller(Model m, View v) {
         this.model = m;
         this.view = v;
+        // 로케이션 판에 모델을 물려줌.
+        this.view.setLocationPaneModels(m.leftFileModel, m.rightFileModel);
         this.view.setActionListener(this);
     }
 
@@ -117,6 +119,7 @@ public class Controller implements ActionListener
             if ( !view.getFileTextPane(View.TARGET_LEFT).getEditable() && !view.getFileTextPane(View.TARGET_RIGHT).getEditable() ) {
                 model.textCompare();
                 view.printCompare(model.getDiffModel());
+                view.getLocPane().repaint(); // 컴포넌트 다시 그려줄 것을 호출
             } else { // 아니면 메세지를 띄어줌.
                 view.showMessage("편집 상태인 문서가 있습니다. \n편집 아이콘을 한번 더 눌러 편집을 완료하세요.", "WARNING", JOptionPane.WARNING_MESSAGE);
             }
