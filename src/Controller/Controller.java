@@ -117,10 +117,8 @@ public class Controller implements ActionListener
             // 비교 버튼 클릭 시
             // 만약 둘 다 편집 상태가 아닐 경우 비교 수행
             if ( !view.getFileTextPane(View.TARGET_LEFT).getEditable() && !view.getFileTextPane(View.TARGET_RIGHT).getEditable() ) {
-                // fake line
-                model.textCompare();
-
-                view.printCompare(model.getDiffModel());
+                model.compareLines();
+                view.printCompare(model.getFileModel(Model.LEFT).getLines(), model.getFileModel(Model.RIGHT).getLines());
                 view.getLocPane().repaint(); // 컴포넌트 다시 그려줄 것을 호출
             } else { // 아니면 메세지를 띄어줌.
                 view.showMessage("편집 상태인 문서가 있습니다. \n편집 아이콘을 한번 더 눌러 편집을 완료하세요.", "WARNING", JOptionPane.WARNING_MESSAGE);

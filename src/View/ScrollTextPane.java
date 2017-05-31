@@ -5,6 +5,7 @@
 package View;
 
 import Model.*;
+
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
@@ -12,8 +13,8 @@ import java.util.ArrayList;
 
 public class ScrollTextPane extends JScrollPane {
     private final static Color COLOR_NORMAL = Color.WHITE;
-    private final static Color COLOR_DIFF_STRING = Color.PINK;
-    private final static Color COLOR_DIFF_LINE = Color.YELLOW;
+    private final static Color COLOR_DIFF_STRING = Color.ORANGE;
+    private final static Color COLOR_DIFF_LINE = Color.PINK;
     private final static Color COLOR_DIFF_FAKE_LINE = Color.GRAY;
 
     private JTextPane txtPane;
@@ -26,7 +27,6 @@ public class ScrollTextPane extends JScrollPane {
     private void initialize() {
         txtPane = new JTextPane();
         super.setViewportView(txtPane);
-
         lineHeight = txtPane.getFontMetrics(txtPane.getFont()).getHeight();
     }
 
@@ -36,47 +36,77 @@ public class ScrollTextPane extends JScrollPane {
 
     // 모든 색을 제거해줌 = 초기화
     public void clearColor() {
-        StyledDocument ldoc = txtPane.getStyledDocument();
-        StyleContext sc = StyleContext.getDefaultStyleContext();
-        AttributeSet attrs = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Background, COLOR_NORMAL);
-        ldoc.setCharacterAttributes(0, txtPane.getText().length(), attrs, true);
+        this.repaint();
     }
 
     // DiffBlock의 인덱스 어레이리스트를 가져오고, 인덱스 객체들을 이용하여 색 표현.
-    public void printCompare(ArrayList<Index> indexes) {
+    public void printCompare(ArrayList<Line> lines) {
+        this.repaint();
+        Graphics g = this.getGraphics();
+        /*
+        g.setColor(Color.WHITE);
+        g.fillRect(1, 2, getWidth()-2, getHeight()-2);
+        */
 
-        // 텍스트판에 적용시킬 스타일. 컬러 적용에 사용됨.
+        int h = 0;
+        for(int i = 0; i < lines.size(); i++) {
+            if ( lines.get(i).getState() == 1 ) {
+                g.setColor(ScrollTextPane.COLOR_DIFF_LINE);
+                g.fillRect(1,2+ lineHeight * i, getWidth()-2, lineHeight);
+            } else if ( lines.get(i).getState() == -1 ) {
+                g.setColor(ScrollTextPane.COLOR_DIFF_FAKE_LINE);
+                g.fillRect(1,2+ lineHeight * i, getWidth()-2, lineHeight);
+            } else {
+                // do nothing.
+            }
+
+            for(int x = 0; x < lines.get(i).getDiffCharSet().size(); x++) {
+                int diffPos = lines.get(i).getDiffCharSet().get(x) - h;
+                int startPos = txtPane.getFontMetrics(txtPane.getFont()).charsWidth(lines.get(i).toString().toCharArray(), 0, diffPos);
+                int width = txtPane.getFontMetrics(txtPane.getFont()).charWidth(startPos);
+                g.setColor(ScrollTextPane.COLOR_DIFF_STRING);
+                g.fillRect(startPos,2+ i * lineHeight , width, lineHeight);
+            }
+
+            h += lines.get(i).toString().length() + 1;
+        }
+
+        //txtPane.setText("");
+        //for(int i = 0; i < lines.size(); i++) {
+        //    txtPane.setText(txtPane.getText() + lines.get(i) + '\n');
+        //}
+        /*
+
+
+
+
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, getWidth(), getHeight());
+
         StyledDocument sDoc = txtPane.getStyledDocument();
         StyleContext sc = StyleContext.getDefaultStyleContext();
-        AttributeSet attrs = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Background, COLOR_DIFF_STRING);
+        AttributeSet attrs;
+        int address = 0;
 
+        // 텍스트판에 적용시킬 스타일. 컬러 적용에 사용됨.
+        for(int i = 0; i < lines.size(); i++) {
+            if ( lines.get(i).getState() == 1 ) {
+                attrs = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Background, COLOR_DIFF_LINE);
+                sDoc.setCharacterAttributes(address, lines.get(i).toString().length(), attrs, true);
+            } else if ( lines.get(i).getState() == -1 ) {
+                attrs = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Background, COLOR_DIFF_FAKE_LINE);
+                sDoc.setCharacterAttributes(address, lines.get(i).toString().length(), attrs, true);
+            }
+            address += lines.get(i).toString().length() + 1;
+        }
+
+        attrs = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Background, COLOR_DIFF_STRING);
         // 인덱스 객체들을 하나씩 불러와 시작 인덱스로부터 끝 인덱스까지 색칠.
         for(int i = 0; i < indexes.size(); i++) {
             sDoc.setCharacterAttributes(indexes.get(i).First(), indexes.get(i).Last() - indexes.get(i).First() + 1, attrs, true);
         }
+        */
     }
-
-    /*
-    public void printCompare(ArrayList<Line> lines) {
-        clearColor();
-
-        // 텍스트판에 적용시킬 스타일. 컬러 적용에 사용됨.
-        StyledDocument sDoc = txtPane.getStyledDocument();
-        StyleContext sc = StyleContext.getDefaultStyleContext();
-        AttributeSet attrs = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Background, COLOR_DIFF_STRING);
-
-        for (int row = 0; row < lines.size(); row++) {
-            if (lines.get(row).getState() == 1) {
-                // 줄 색칠
-                // 구현 필요
-                // 글자 색칠
-                for (int i = 0; i < lines.get(row).getDiffCharSet().size(); i++) {
-                    sDoc.setCharacterAttributes(lines.get(row).getDiffCharSet().get(i), 1, attrs, true);
-                }
-            }
-        }
-    }
-    */
 }
 /*
 class LineHighlightTextPaneUI extends BasicTextPaneUI {

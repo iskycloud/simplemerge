@@ -9,6 +9,7 @@ import Model.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class View {
     public static String TARGET_LEFT = "Left";
@@ -144,10 +145,11 @@ public class View {
         rightFilePane.getScrollTextPane().clearColor();
     }
 
-    // 비교한 결과에 대한 글자 배경 색칠
-    public void printCompare(DiffModel dm) {
+    // TODO Modify : diffCharSet으로
+    // 비교한 결과에 대한 글자 배경 색칠.
+    public void printCompare(ArrayList<Line> leftLines, ArrayList<Line> rightLines) {
         clearColor();
-        leftFilePane.getScrollTextPane().printCompare(dm.getDiffBlock(Model.LEFT).getIndexes());
-        rightFilePane.getScrollTextPane().printCompare(dm.getDiffBlock(Model.RIGHT).getIndexes());
+        leftFilePane.getScrollTextPane().printCompare(leftLines);
+        rightFilePane.getScrollTextPane().printCompare(rightLines);
     }
 }

@@ -6,6 +6,8 @@ package Model;
 
 import View.View;
 
+import java.util.ArrayList;
+
 public class Model {
 
     // 상수 : 주로 패널의 왼쪽 오른쪽 구분을 위해 사용될 것임.
@@ -13,12 +15,11 @@ public class Model {
     public final static String RIGHT = "Right";
 
     public FileModel leftFileModel, rightFileModel;
-    public DiffModel diffModel;
+    private ArrayList<DiffBlock> diffBlocks; // 왼쪽, 오른쪽 파일 모델 (혹은 파일 내용)을 비교한 결과를 저장함.
 
     public Model() {
         leftFileModel = new FileModel(LEFT);
         rightFileModel = new FileModel(RIGHT);
-        diffModel = new DiffModel(leftFileModel, rightFileModel);
     }
 
     public FileModel getFileModel(String s) {
@@ -29,10 +30,6 @@ public class Model {
             return rightFileModel;
         }
         return null; //TODO Exception
-    }
-
-    public DiffModel getDiffModel() {
-        return diffModel;
     }
 
     public int setFileContent(View v, String s) {
@@ -46,8 +43,11 @@ public class Model {
         return returnVal;
     }
 
-    public void textCompare() {
-        diffModel.addFakeLine();
-        //diffModel.textCompare();
+    public void compareLines() {
+        // 둘다 파일 경로가 올바른지?
+        if ( leftFileModel.isFileLoaded() && rightFileModel.isFileLoaded() ) {
+            CalcDiff.addFakeLine(leftFileModel.getLines(), rightFileModel.getLines());
+            CalcDiff.compareLines(leftFileModel.getLines(), rightFileModel.getLines(), diffBlocks);
+        }
     }
 }

@@ -7,15 +7,24 @@ import java.util.ArrayList;
  */
 
 // DiffBlock 클래스.
-// 역할 : 왼쪽, 오른쪽 파일 모델 (혹은 파일 내용)을 비교한 결과를 저장함.
+// 역할 : 차이가 나는 부분의 시작 인덱스와 마지막 인덱스를 저장함.
 public class DiffBlock {
-    private ArrayList<Index> indexes;
+    private int first, last;
 
     public DiffBlock() {
-        this.indexes = new ArrayList<Index>();
+
     }
 
-    public ArrayList<Index> getIndexes() {
-        return this.indexes;
+    public DiffBlock(int first, int last) {
+        this.first = first;
+        this.last = last;
+    }
+
+    public int getFirst() {
+        return this.first;
+    }
+
+    public int getLast() {
+        return this.last;
     }
 }
