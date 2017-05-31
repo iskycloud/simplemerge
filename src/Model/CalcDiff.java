@@ -52,31 +52,32 @@ public class CalcDiff {
     // Fake Line
     public static void addFakeLine(ArrayList<Line> leftLines, ArrayList<Line> rightLines) {
         // TODO Modify : Fake Line String
-        Line fakeLine = new Line("=FAKELINE=FAKELINE=", -1);
+        Line fakeLine = new Line("", -1);
         ArrayList<Line> minLines;
-        int leftRow, rightRow, diffLineSize;
-        String lcsLine;
+        int leftRow, rightRow, storedRightRow, diffLineSize;
 
         // 왼쪽 파일 텍스트부터 fake line 삽입
-        for (leftRow = 1, rightRow = 0; leftRow < leftLines.size(); leftRow++) {
+        for (leftRow = 0, storedRightRow = 0; leftRow < leftLines.size(); leftRow++) {
             if (leftLines.get(leftRow).getState() >= 0) {
-                for (; rightRow < rightLines.size(); rightRow++) {
+                for (rightRow = storedRightRow; rightRow < rightLines.size(); rightRow++) {
                     if (rightLines.get(rightRow).getState() >= 0) {
-                        lcsLine = lcs(leftLines.get(leftRow).toString(), rightLines.get(rightRow).toString());
-
-                        if (leftLines.get(leftRow).toString().length() == lcsLine.length()) {
+                        if (leftLines.get(leftRow).toString().equals(rightLines.get(rightRow).toString())) {
                             if (leftRow > rightRow) {
                                 for (int i = 0; i < (leftRow - rightRow); i++) {
                                     rightLines.add(rightRow, fakeLine);
                                 }
-                                rightRow = rightRow + (leftRow - rightRow);
+                                storedRightRow = rightRow + (leftRow - rightRow);
                                 break;
                             }
-                            else {
+                            else if (leftRow < rightRow) {
                                 for (int i = 0; i < (rightRow - leftRow); i++) {
                                     leftLines.add(leftRow, fakeLine);
                                 }
                                 leftRow = leftRow + (rightRow - leftRow);
+                                break;
+                            }
+                            else {
+                                storedRightRow++;
                                 break;
                             }
                         }
@@ -103,11 +104,11 @@ public class CalcDiff {
         // TODO Remove : Print console for debug
         System.out.println("Left:");
         for (int i = 0; i < leftLines.size(); i++) {
-            System.out.println(leftLines.get(i).toString());
+            System.out.println(leftLines.get(i).getState() + " : " + leftLines.get(i).toString());
         }
         System.out.println("Right:");
         for (int i = 0; i < rightLines.size(); i++) {
-            System.out.println(rightLines.get(i).toString());
+            System.out.println(rightLines.get(i).getState() + " : " + rightLines.get(i).toString());
         }
     }
 

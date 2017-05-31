@@ -15,7 +15,7 @@ public class Model {
     public final static String RIGHT = "Right";
 
     public FileModel leftFileModel, rightFileModel;
-    private ArrayList<DiffBlock> diffBlocks; // 왼쪽, 오른쪽 파일 모델 (혹은 파일 내용)을 비교한 결과를 저장함.
+    private ArrayList<DiffBlock> diffBlocks = new ArrayList<DiffBlock>(); // 왼쪽, 오른쪽 파일 모델 (혹은 파일 내용)을 비교한 결과를 저장함.
 
     public Model() {
         leftFileModel = new FileModel(LEFT);

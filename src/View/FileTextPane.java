@@ -5,8 +5,11 @@
 package View;
 
 import Model.FileModel;
+import Model.Line;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class FileTextPane extends JPanel {
     public static String BTN_LOAD = "Load";
@@ -86,15 +89,19 @@ public class FileTextPane extends JPanel {
     public void loadFile(FileModel fm) {
         //View에 구현
         txtPath.setText(fm.getFilePath());
+        this.setLines(fm.getLines());
+        //TODO : View.java에 양쪽 모두 초기화하는 것으로 수정했는데 추후 수정할 수 있으므로 잠시 둠.
+        //scrTxtPane.clearColor();
+    }
+
+    public void setLines(ArrayList<Line> lines) {
         scrTxtPane.getJTextPane().setText("");
-        for (int i = 0; i < fm.getLines().size(); i++) {
-            scrTxtPane.getJTextPane().setText(scrTxtPane.getJTextPane().getText() + fm.getLines().get(i));
-            if (i != fm.getLines().size() - 1) {
+        for (int i = 0; i < lines.size(); i++) {
+            scrTxtPane.getJTextPane().setText(scrTxtPane.getJTextPane().getText() + lines.get(i));
+            if (i != lines.size() - 1) {
                 scrTxtPane.getJTextPane().setText(scrTxtPane.getJTextPane().getText() + '\n');
             }
         }
-        //TODO : View.java에 양쪽 모두 초기화하는 것으로 수정했는데 추후 수정할 수 있으므로 잠시 둠.
-        //scrTxtPane.clearColor();
     }
 
     public boolean getEditable() {

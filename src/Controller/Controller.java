@@ -6,7 +6,6 @@ import Model.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 
 public class Controller implements ActionListener
 {
@@ -119,10 +118,14 @@ public class Controller implements ActionListener
             if ( !view.getFileTextPane(View.TARGET_LEFT).getEditable() && !view.getFileTextPane(View.TARGET_RIGHT).getEditable() ) {
                 model.compareLines();
                 view.printCompare(model.getFileModel(Model.LEFT).getLines(), model.getFileModel(Model.RIGHT).getLines());
-                view.getLocPane().repaint(); // 컴포넌트 다시 그려줄 것을 호출
+                view.setLines(Model.LEFT, model.getFileModel(Model.LEFT).getLines());
+                view.setLines(Model.RIGHT, model.getFileModel(Model.RIGHT).getLines());
+                view.getLocPane().repaint(); // DO NOT REMOVE!! 컴포넌트 다시 그려줄 것을 호출
             } else { // 아니면 메세지를 띄어줌.
                 view.showMessage("편집 상태인 문서가 있습니다. \n편집 아이콘을 한번 더 눌러 편집을 완료하세요.", "WARNING", JOptionPane.WARNING_MESSAGE);
             }
+        } else if (actionName.equals(Controller.BTN_MERGE_LEFT_TO_RIGHT)) {
+
         }
     }
 }

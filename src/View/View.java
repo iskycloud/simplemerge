@@ -152,4 +152,9 @@ public class View {
         leftFilePane.getScrollTextPane().printCompare(leftLines);
         rightFilePane.getScrollTextPane().printCompare(rightLines);
     }
+
+    public void setLines(String name, ArrayList<Line> lines) {
+        if ( name.equals(View.TARGET_LEFT) ) leftFilePane.setLines(lines);
+        else if ( name.equals(View.TARGET_RIGHT) ) rightFilePane.setLines(lines);
+    }
 }
