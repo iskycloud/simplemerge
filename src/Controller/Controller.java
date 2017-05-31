@@ -117,7 +117,9 @@ public class Controller implements ActionListener
             // 비교 버튼 클릭 시
             // 만약 둘 다 편집 상태가 아닐 경우 비교 수행
             if ( !view.getFileTextPane(View.TARGET_LEFT).getEditable() && !view.getFileTextPane(View.TARGET_RIGHT).getEditable() ) {
+                // fake line
                 model.textCompare();
+
                 view.printCompare(model.getDiffModel());
                 view.getLocPane().repaint(); // 컴포넌트 다시 그려줄 것을 호출
             } else { // 아니면 메세지를 띄어줌.

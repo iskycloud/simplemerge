@@ -76,6 +76,73 @@ public class DiffModel {
         return sb.reverse().toString();
     }
 
+
+    // Fake Line
+    public void addFakeLine() {
+        // TODO Modify : Fake Line String
+        Line fakeLine = new Line("=FAKELINE=FAKELINE=", -1);
+        ArrayList<Line> leftTexts, rightTexts;
+        ArrayList<Line> minTexts;
+        int leftRow, rightRow, diffLineSize;
+        String lcsLine;
+
+        leftTexts = leftFileModel.getLines();
+        rightTexts = rightFileModel.getLines();
+
+        // 왼쪽 파일 텍스트부터 fake line 삽입
+        for (leftRow = 1, rightRow = 0; leftRow < leftTexts.size(); leftRow++) {
+            if (leftTexts.get(leftRow).getState() >= 0) {
+                for (; rightRow < rightTexts.size(); rightRow++) {
+                    if (rightTexts.get(rightRow).getState() >= 0) {
+                        lcsLine = this.lcs(leftTexts.get(leftRow).toString(), rightTexts.get(rightRow).toString());
+
+                        if (leftTexts.get(leftRow).toString().length() == lcsLine.length()) {
+                            if (leftRow > rightRow) {
+                                for (int i = 0; i < (leftRow - rightRow); i++) {
+                                    rightTexts.add(rightRow, fakeLine);
+                                }
+                                rightRow = rightRow + (leftRow - rightRow);
+                                break;
+                            }
+                            else {
+                                for (int i = 0; i < (rightRow - leftRow); i++) {
+                                    leftTexts.add(leftRow, fakeLine);
+                                }
+                                leftRow = leftRow + (rightRow - leftRow);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        diffLineSize = Math.max(leftTexts.size(), rightTexts.size()) - Math.min(leftTexts.size(), rightTexts.size());
+        System.out.println("Diff Line Size: " + diffLineSize);
+        if (diffLineSize > 0) {
+            if (leftTexts.size() >= rightTexts.size()) {
+                minTexts = rightTexts;
+            }
+            else {
+                minTexts = leftTexts;
+            }
+
+            for (int i = 0; i < diffLineSize; i++) {
+                minTexts.add(fakeLine);
+            }
+        }
+
+        // TODO Remove : Print console for debug
+        System.out.println("Left:");
+        for (int i = 0; i < leftTexts.size(); i++) {
+            System.out.println(leftTexts.get(i).toString());
+        }
+        System.out.println("Right:");
+        for (int i = 0; i < rightTexts.size(); i++) {
+            System.out.println(rightTexts.get(i).toString());
+        }
+    }
+
     // 텍스트 비교 메소드
     public void textCompare() {
         // 둘다 파일 경로가 올바른지?

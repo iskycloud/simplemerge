@@ -47,6 +47,7 @@ public class Model {
     }
 
     public void textCompare() {
-        diffModel.textCompare();
+        diffModel.addFakeLine();
+        //diffModel.textCompare();
     }
 }
