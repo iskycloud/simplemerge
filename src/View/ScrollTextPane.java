@@ -9,11 +9,12 @@ import Model.*;
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.text.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ScrollTextPane extends JScrollPane {
-    private final static Color COLOR_NORMAL = new Color(0, 0, 0, 128);       // WHITE
+public class ScrollTextPane extends JScrollPane implements CaretListener {
+    private final static Color COLOR_NORMAL = new Color(255, 255, 255, 128);       // WHITE
     private final static Color COLOR_DIFF_STRING = new Color(255, 200, 0, 128);	// ORANGE
     private final static Color COLOR_DIFF_LINE = new Color(255, 175, 175, 128);	// PINK
     private final static Color COLOR_DIFF_FAKE_LINE = new Color(128, 128, 128, 128);	// GRAY
@@ -31,19 +32,23 @@ public class ScrollTextPane extends JScrollPane {
         txtPane = new JTextPane();
         super.setViewportView(txtPane);
         lineHeight = txtPane.getFontMetrics(txtPane.getFont()).getHeight();
-        //txtPane.addCaretListener(this);
+        txtPane.addCaretListener(this);
     }
 
     public JTextPane getJTextPane() {
         return this.txtPane;
     }
 
+    //TODO: 텍스트 칠한 것 초기화 (TODO : 추가되었다는 의미)
     // 모든 색을 제거해줌 = 초기화
     public void clearColor() {
-
+        StyledDocument sDoc = txtPane.getStyledDocument();
+        StyleContext sc = StyleContext.getDefaultStyleContext();
+        AttributeSet attrs = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Background, COLOR_NORMAL);
+        sDoc.setCharacterAttributes(0, txtPane.getText().length(), attrs, true);
     }
 
-
+    //TODO: 잘 살펴보셈  (TODO : 추가되었다는 의미)
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -67,28 +72,27 @@ public class ScrollTextPane extends JScrollPane {
     }
 
     public void printMark(Graphics g) {
-        int address = 0;
+        this.clearColor(); //TODO : 색칠하기 전 텍스트 색 초기화
+
+        StyledDocument sDoc = txtPane.getStyledDocument();
+        StyleContext sc = StyleContext.getDefaultStyleContext();
+        AttributeSet attrs = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Background, COLOR_DIFF_STRING);
+
         for(int i = 0; i < lines.size(); i++) {
             if ( lines.get(i).getState() == 1 ) {
+                for (int x = 0; x < lines.get(i).getDiffCharSet().size(); x++) {
+                    sDoc.setCharacterAttributes(lines.get(i).getDiffCharSet().get(x), 1, attrs, true);
+                }
+
                 g.setColor(ScrollTextPane.COLOR_DIFF_LINE);
                 g.fillRect(1,2+ lineHeight * i, getWidth()-2, lineHeight);
             } else if ( lines.get(i).getState() == -1 ) {
                 g.setColor(ScrollTextPane.COLOR_DIFF_FAKE_LINE);
                 g.fillRect(1,2+ lineHeight * i, getWidth()-2, lineHeight);
-            } else {
-                // do nothing.
             }
-
-            for(int x = 0; x < lines.get(i).getDiffCharSet().size(); x++) {
-                int diffPos = lines.get(i).getDiffCharSet().get(x) - address;
-                int startPos = txtPane.getFontMetrics(txtPane.getFont()).charsWidth(lines.get(i).toString().toCharArray(), 0, diffPos+1);
-                int width = txtPane.getFontMetrics(txtPane.getFont()).charWidth(startPos);
-                g.setColor(ScrollTextPane.COLOR_DIFF_STRING);
-                g.fillRect(startPos,2+ i * lineHeight , width, lineHeight);
-            }
-
-            address += lines.get(i).toString().length() + 1;
         }
+
+        this.repaint();
     }
 }
 /*

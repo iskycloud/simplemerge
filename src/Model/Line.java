@@ -30,6 +30,9 @@ public class Line {
         }
     }
 
+    //TODO : 추가된 부분임. 라인 수정
+    public void setString(String text) { this.line = text; }
+
     @Override
     public String toString() {
         return this.line;
@@ -44,6 +47,8 @@ public class Line {
     }
 
     public void setState(int i) {
-        this.state = i;
+        if (this.state >= 0) {
+            this.state = i;
+        }
     }
 }

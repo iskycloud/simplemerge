@@ -54,33 +54,51 @@ public class CalcDiff {
         // TODO Modify : Fake Line String
         Line fakeLine = new Line("", -1);
         ArrayList<Line> minLines;
-        int leftRow, rightRow, storedRightRow, diffLineSize;
+        int row, addLeftRow, addRightRow, diffLineSize;
 
-        // 왼쪽 파일 텍스트부터 fake line 삽입
-        for (leftRow = 0, storedRightRow = 0; leftRow < leftLines.size(); leftRow++) {
-            if (leftLines.get(leftRow).getState() >= 0) {
-                for (rightRow = storedRightRow; rightRow < rightLines.size(); rightRow++) {
-                    if (rightLines.get(rightRow).getState() >= 0) {
-                        if (leftLines.get(leftRow).toString().equals(rightLines.get(rightRow).toString())) {
-                            if (leftRow > rightRow) {
-                                for (int i = 0; i < (leftRow - rightRow); i++) {
-                                    rightLines.add(rightRow, fakeLine);
-                                }
-                                storedRightRow = rightRow + (leftRow - rightRow);
-                                break;
-                            }
-                            else if (leftRow < rightRow) {
-                                for (int i = 0; i < (rightRow - leftRow); i++) {
-                                    leftLines.add(leftRow, fakeLine);
-                                }
-                                leftRow = leftRow + (rightRow - leftRow);
-                                break;
-                            }
-                            else {
-                                storedRightRow++;
-                                break;
-                            }
+        for (row = 0; row < leftLines.size() && row < rightLines.size(); row++) {
+            if (leftLines.get(row).getState() >= 0 && rightLines.get(row).getState() >= 0) {
+                // 왼쪽 = 공백라인 O, 오른쪽 = 공백라인 X
+                if (leftLines.get(row).toString().trim().length() == 0 && rightLines.get(row).toString().trim().length() != 0) {
+                    rightLines.add(row, fakeLine);
+                }
+                // 왼쪽 = 공백라인 X, 오른쪽 = 공백라인 O
+                else if (leftLines.get(row).toString().trim().length() != 0 && rightLines.get(row).toString().trim().length() == 0) {
+                    leftLines.add(row, fakeLine);
+                }
+                // 왼쪽 = 공백라인 O, 오른쪽 = 공백라인 O -> continue
+                // 왼쪽 = 공백라인 X, 오른쪽 = 공백라인 X
+                else if (leftLines.get(row).toString().trim().length() != 0 && rightLines.get(row).toString().trim().length() != 0) {
+                    addLeftRow = -1;
+                    addRightRow = -1;
+
+                    for (int i = row; i < rightLines.size(); i++) {
+                        //if (leftLines.get(row).toString().equals(rightLines.get(i).toString())) {
+                        if (lcs(leftLines.get(row).toString(), rightLines.get(i).toString()).length() > 0) {
+                            addLeftRow = i;
+                            break;
                         }
+                    }
+
+                    for (int i = row; i < leftLines.size(); i++) {
+                        //if (rightLines.get(row).toString().equals(leftLines.get(i).toString())) {
+                        if (lcs(leftLines.get(i).toString(), rightLines.get(row).toString()).length() > 0) {
+                            addRightRow = i;
+                            break;
+                        }
+                    }
+
+                    if (addRightRow >= 0 && (addLeftRow > addRightRow || addLeftRow < 0)) {
+                        for (int i = 0; i < (addRightRow - row); i++) {
+                            rightLines.add(row, fakeLine);
+                        }
+                        row = addRightRow;
+                    }
+                    else if (addLeftRow >= 0 && (addLeftRow < addRightRow || addRightRow < 0)) {
+                        for (int i = 0; i < (addLeftRow - row); i++) {
+                            leftLines.add(row, fakeLine);
+                        }
+                        row = addLeftRow;
                     }
                 }
             }
@@ -113,8 +131,18 @@ public class CalcDiff {
     }
 
     // 텍스트 비교 메소드
-    public static void compareLines(ArrayList<Line> leftLines, ArrayList<Line> rightLines, ArrayList<DiffBlock> diffBlocks) {
+    public static void compareLines(ArrayList<Line> leftLines, ArrayList<Line> rightLines, ArrayList<DiffBlock> leftDiffBlocks, ArrayList<DiffBlock> rightDiffBlocks) {
         int prevLeftAddress = 0, prevRightAddress = 0;
+
+        for(int i = 0; i < leftLines.size(); i++) {
+            leftLines.get(i).getDiffCharSet().clear();
+        }
+
+        for(int i = 0; i < rightLines.size(); i++) {
+            rightLines.get(i).getDiffCharSet().clear();
+        }
+        leftDiffBlocks.clear();
+        rightDiffBlocks.clear();
 
         // 왼쪽 파일 텍스트를 기준점으로 잡고, 열 단위로 lcs를 수행한다.
         for(int row = 0; row < leftLines.size(); row++ ) {
@@ -139,6 +167,7 @@ public class CalcDiff {
                 } else { // 일치하면 다음 어드레스로 넘김
                     if ( firstAddress != -1 && lastAddress == -1 ) {
                         lastAddress = prevLeftAddress + i - 1;
+                        leftDiffBlocks.add(new DiffBlock(firstAddress, lastAddress));//TODO: 왼쪽 텍스트에서 차이가 나는 부분을 DiffBlock으로 저장.  (TODO : 추가되었다는 의미)
                         firstAddress = -1; lastAddress = -1;
                     }
                     lastLeftAddress = i;
@@ -157,6 +186,7 @@ public class CalcDiff {
                 } else { // 일치하면 다음 어드레스로 넘김
                     if ( firstAddress != -1 && lastAddress == -1 ) {
                         lastAddress = prevRightAddress + i - 1;
+                        rightDiffBlocks.add(new DiffBlock(firstAddress, lastAddress));//TODO: 오른쪽 텍스트에서 차이가 나는 부분을 DiffBlock으로 저장.  (TODO : 추가되었다는 의미)
                         firstAddress = -1; lastAddress = -1;
                     }
                     lastRightAddress = i;
@@ -173,6 +203,9 @@ public class CalcDiff {
 
                 int startAddress = prevLeftAddress+lastLeftAddress+1;
                 int finishAddress = prevLeftAddress+leftLines.get(row).toString().length()-1;
+                //TODO: 왼쪽 부분은 가장 끝 인덱스 두개를 저장합니다. (TODO : 추가되었다는 의미)
+                rightDiffBlocks.add(new DiffBlock(prevRightAddress+rightLines.get(row).toString().length(),prevRightAddress+rightLines.get(row).toString().length()));
+                leftDiffBlocks.add(new DiffBlock(startAddress, finishAddress)); //TODO: 왼쪽 텍스트에서 차이가 나는 부분을 DiffBlock으로 저장.  (TODO : 추가되었다는 의미)
             }
 
             if ( rightLines.get(row).toString().length()-1 > lastRightAddress ) {
@@ -183,6 +216,32 @@ public class CalcDiff {
 
                 int startAddress = prevRightAddress+lastRightAddress+1;
                 int finishAddress = prevRightAddress+rightLines.get(row).toString().length()-1;
+
+                //TODO: 왼쪽 부분은 가장 끝 인덱스 두개를 저장합니다. (TODO : 추가되었다는 의미)
+                leftDiffBlocks.add(new DiffBlock(prevLeftAddress+leftLines.get(row).toString().length(),prevLeftAddress+leftLines.get(row).toString().length()));
+                rightDiffBlocks.add(new DiffBlock(startAddress, finishAddress)); //TODO: 오른쪽 텍스트에서 차이가 나는 부분을 DiffBlock으로 저장.  (TODO : 추가되었다는 의미)
+            }
+
+            if ( leftLines.get(row).toString().length() == 0 && rightLines.get(row).toString().length() != 0 ) {
+                if ( leftLines.get(row).getState() != -1 ) {
+                    leftLines.get(row).setState(1);
+                }
+                if ( rightLines.get(row).getState() != -1 ) {
+                    rightLines.get(row).setState(1);
+                }
+                for (int i = prevRightAddress; i < prevRightAddress + rightLines.get(row).toString().length(); i++ ) {
+                    rightLines.get(row).getDiffCharSet().add(i);
+                }
+            } else if ( rightLines.get(row).toString().length() == 0 && leftLines.get(row).toString().length() != 0 ) {
+                if ( leftLines.get(row).getState() != -1 ) {
+                    leftLines.get(row).setState(1);
+                }
+                if ( rightLines.get(row).getState() != -1 ) {
+                    rightLines.get(row).setState(1);
+                }
+                for (int i = prevLeftAddress; i < prevLeftAddress + leftLines.get(row).toString().length(); i++ ) {
+                    leftLines.get(row).getDiffCharSet().add(i);
+                }
             }
 
             // 가장 마지막 위치의 어드레스를 기준으로 다음 어드레스를 저장한다.
@@ -193,6 +252,7 @@ public class CalcDiff {
         }
 
         // 다른 글자가 포함된 라인의 시작과 끝 인덱스를 ArrayList에 저장한다.
+        /*
         int firstDiffLine = -1, lastDiffLine = -1;
         for (int row = 0; row < leftLines.size(); row++) {
             if (leftLines.get(row).getState() != 0 && firstDiffLine < 0) {
@@ -202,10 +262,12 @@ public class CalcDiff {
                 lastDiffLine = row;
             }
             else if (leftLines.get(row).getState() == 0 && firstDiffLine >= 0) {
+                System.out.println(firstDiffLine + "/" + lastDiffLine);
                 diffBlocks.add(new DiffBlock(firstDiffLine, lastDiffLine));
                 firstDiffLine = -1;
                 lastDiffLine = -1;
             }
         }
+        */
     }
 }

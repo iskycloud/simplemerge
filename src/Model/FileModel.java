@@ -63,6 +63,13 @@ public class FileModel {
         }
     }
 
+    public void editLine(int row, String text) {
+        if ( row < lines.size() ) {
+            if ( lines.get(row).getState() == -1 ) lines.get(row).setState(0);
+            lines.get(row).setString(text);
+        }
+    }
+
     // 파일이 로드되었는지?
     public boolean isFileLoaded() {
         if ( getFilePath().compareTo("") != 0 ) {
@@ -76,9 +83,11 @@ public class FileModel {
         try {
             BufferedWriter out = new BufferedWriter(new FileWriter(filePath));
             for (int i = 0; i < lines.size(); i++) {
-                out.write(lines.get(i).toString());
-                if ( i != lines.size()-1) out.newLine();
-                out.flush();
+                if ( lines.get(i).getState() != -1 ) { // 페이크 라인은 저장 안하기
+                    out.write(lines.get(i).toString());
+                    if (i != lines.size() - 1) out.newLine();
+                    out.flush();
+                }
             }
 
             out.close();
