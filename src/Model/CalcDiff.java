@@ -73,16 +73,16 @@ public class CalcDiff {
                     addRightRow = -1;
 
                     for (int i = row; i < rightLines.size(); i++) {
-                        //if (leftLines.get(row).toString().equals(rightLines.get(i).toString())) {
-                        if (lcs(leftLines.get(row).toString(), rightLines.get(i).toString()).length() > 0) {
+                        int lcsStringLen = lcs(leftLines.get(row).toString(), rightLines.get(i).toString()).length();
+                        if (lcsStringLen > (leftLines.get(row).toString().length() / 2) && lcsStringLen > (rightLines.get(i).toString().length() / 2)) {
                             addLeftRow = i;
                             break;
                         }
                     }
 
                     for (int i = row; i < leftLines.size(); i++) {
-                        //if (rightLines.get(row).toString().equals(leftLines.get(i).toString())) {
-                        if (lcs(leftLines.get(i).toString(), rightLines.get(row).toString()).length() > 0) {
+                        int lcsStringLen = lcs(leftLines.get(i).toString(), rightLines.get(row).toString()).length();
+                        if (lcsStringLen > (leftLines.get(i).toString().length() / 2) && lcsStringLen > (rightLines.get(row).toString().length() / 2)) {
                             addRightRow = i;
                             break;
                         }
