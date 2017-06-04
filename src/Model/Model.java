@@ -75,7 +75,7 @@ public class Model {
     //TODO: 이를 위한 해결책? : 레프트블록과 라이트블록의 어드레스 길이 차이를 이용해서 보정해주면 가능할 것 같은데 이는 내가 연구해보겠음.
     public void mergeAll(String orgs, JTextPane left, JTextPane right) {
         if ( orgs.equals(Model.LEFT) ) {
-            for(int x = 0; x < leftDiffBlocks.size(); x++) {
+            for(int x = leftDiffBlocks.size()-1; x >= 0; x--) {
                 int startDestPos = this.rightDiffBlocks.get(x).getFirst();
                 int finishDestPos = this.rightDiffBlocks.get(x).getLast();
 
@@ -84,7 +84,7 @@ public class Model {
 
                 for (int i = 0, address = 0; i < rightFileModel.getLines().size(); i++) {
                     if ( startDestPos <= address + rightFileModel.getLines().get(i).toString().length()) {
-                        String newLine = this.rightFileModel.getLines().get(i).toString().substring(0, startDestPos - address + 1);
+                        String newLine = this.rightFileModel.getLines().get(i).toString().substring(0, startDestPos - address);
                         newLine += left.getText().substring(startOrgPos, finishOrgPos + 1);
                         if (finishDestPos - address + 1 < this.rightFileModel.getLines().get(i).toString().length() + 1) {
                             newLine += this.rightFileModel.getLines().get(i).toString().substring(finishDestPos - address + 1);
@@ -92,19 +92,21 @@ public class Model {
                         rightFileModel.getLines().get(i).setString(newLine);
                         break;
                     }
-                    address += rightFileModel.getLines().get(i).toString().length() + 1;
+
+                    address += (rightFileModel.getLines().get(i).toString().length() + 1);
                 }
             }
         } else if ( orgs.equals(Model.RIGHT) ) {
-            for(int x = 0; x < rightDiffBlocks.size(); x++) {
+            for(int x = leftDiffBlocks.size()-1; x >= 0; x--) {
                 int startDestPos = this.leftDiffBlocks.get(x).getFirst();
                 int finishDestPos = this.leftDiffBlocks.get(x).getLast();
 
                 int startOrgPos = this.rightDiffBlocks.get(x).getFirst();
                 int finishOrgPos = this.rightDiffBlocks.get(x).getLast();
+
                 for (int i = 0, address = 0; i < leftFileModel.getLines().size(); i++) {
                     if ( startDestPos <= address + leftFileModel.getLines().get(i).toString().length()) {
-                        String newLine = this.leftFileModel.getLines().get(i).toString().substring(0, startDestPos - address );
+                        String newLine = this.leftFileModel.getLines().get(i).toString().substring(0, startDestPos - address);
                         newLine += right.getText().substring(startOrgPos, finishOrgPos + 1);
                         if (finishDestPos - address + 1 < this.leftFileModel.getLines().get(i).toString().length() + 1) {
                             newLine += this.leftFileModel.getLines().get(i).toString().substring(finishDestPos - address + 1);
@@ -112,7 +114,8 @@ public class Model {
                         leftFileModel.getLines().get(i).setString(newLine);
                         break;
                     }
-                    address += leftFileModel.getLines().get(i).toString().length() + 1;
+
+                    address += (leftFileModel.getLines().get(i).toString().length() + 1);
                 }
             }
         }

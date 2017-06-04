@@ -123,15 +123,19 @@ public class Controller implements ActionListener
         } else if (actionName.equals(Controller.BTN_COMPARE)) {
             // 비교 버튼 클릭 시
             // 만약 둘 다 편집 상태가 아닐 경우 비교 수행
-            if ( !view.getFileTextPane(View.TARGET_LEFT).getEditable() && !view.getFileTextPane(View.TARGET_RIGHT).getEditable() ) {
-                isCompared = true;
-                model.compareLines();
-                view.printCompare(model.getFileModel(Model.LEFT).getLines(), model.getFileModel(Model.RIGHT).getLines());
-                view.setLines(Model.LEFT, model.getFileModel(Model.LEFT).getLines());
-                view.setLines(Model.RIGHT, model.getFileModel(Model.RIGHT).getLines());
-                view.getLocPane().repaint(); // DO NOT REMOVE!! 컴포넌트 다시 그려줄 것을 호출
-            } else { // 아니면 메세지를 띄어줌.
-                view.showMessage("편집 상태인 문서가 있습니다. \n편집 아이콘을 한번 더 눌러 편집을 완료하세요.", "WARNING", JOptionPane.WARNING_MESSAGE);
+            if ( !model.leftFileModel.isFileLoaded() || !model.rightFileModel.isFileLoaded() ) { // 아님 파일이 아직 안불러온 상태?
+                view.showMessage("비교할 파일을 모두 불러오지 않았습니다. \n파일을 모두 불러오십시오.", "WARNING", JOptionPane.WARNING_MESSAGE);
+            } else {
+                if (!view.getFileTextPane(View.TARGET_LEFT).getEditable() && !view.getFileTextPane(View.TARGET_RIGHT).getEditable()) {
+                    isCompared = true;
+                    model.compareLines();
+                    view.printCompare(model.getFileModel(Model.LEFT).getLines(), model.getFileModel(Model.RIGHT).getLines());
+                    view.setLines(Model.LEFT, model.getFileModel(Model.LEFT).getLines());
+                    view.setLines(Model.RIGHT, model.getFileModel(Model.RIGHT).getLines());
+                    view.getLocPane().repaint(); // DO NOT REMOVE!! 컴포넌트 다시 그려줄 것을 호출
+                } else { // 아니면 메세지를 띄어줌.
+                    view.showMessage("편집 상태인 문서가 있습니다. \n편집 아이콘을 한번 더 눌러 편집을 완료하세요.", "WARNING", JOptionPane.WARNING_MESSAGE);
+                }
             }
             //TODO: 왼쪽 -> 오른쪽 Merge. 단, CaretListener로 설정된 좌표를 기준으로! (TODO : 추가되었다는 의미)
         } else if (actionName.equals(Controller.BTN_MERGE_LEFT_TO_RIGHT)) {
