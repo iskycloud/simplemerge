@@ -80,6 +80,7 @@ public class FileTextPane extends JPanel {
         fileMenuPane.add(btnLoad, 0);
         fileMenuPane.add(btnSave, 1);
         fileMenuPane.add(btnEdit, 2);
+
     }
 
     public ScrollTextPane getScrollTextPane() {
@@ -112,6 +113,9 @@ public class FileTextPane extends JPanel {
     public void setStatusText(String text) {
         txtStatus.setText(text);
     }
+
+    public JTextField getTxtStatus() { return this.txtStatus; }
+    public JTextField getTxtPath() { return this.txtPath; }
 
     // 편집 가능 여부 설정.
     public void setEditable(boolean b) {

@@ -63,6 +63,8 @@ public class View {
 /** TODO Implementation :  LocationPane */
         westPane.add(locPane, BorderLayout.WEST);
         westPane.add(leftFilePane, BorderLayout.CENTER);
+
+        leftFilePane.getScrollTextPane().getJTextPane().setName("leftJTextPane");
     }
 
     private void initEastPane() {
@@ -75,7 +77,10 @@ public class View {
         frmBodyPane.add(eastPane, 1);
         eastPane.add(ctlPane, BorderLayout.WEST);
         eastPane.add(rightFilePane, BorderLayout.CENTER);
+        rightFilePane.getScrollTextPane().getJTextPane().setName("rightJTextPane");
     }
+
+    public ControlPane getCtrlPane() { return ctlPane; }
 
     public LocationPane getLocPane() { return locPane; }
     public void setLocationPaneModels(FileModel left, FileModel right) {
