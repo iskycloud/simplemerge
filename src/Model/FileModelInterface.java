@@ -22,22 +22,16 @@ public interface FileModelInterface {
     // 새로운 어레이리스트로 읽음.
     public void setLines(JTextPane jp);
 
-    public void editLine(int row, String text);
-
     // 파일이 로드되었는지?
     public boolean isFileLoaded();
 
-    void saveLines();
+    public void saveLines();
 
-    void setTarget(String t);
-
-    String getTarget();
-
-    String getFilePath();
+    public String getFilePath();
 
     // 어레이리스트 가져오기.
-    ArrayList<Line> getLines();
+    public ArrayList<Line> getLines();
 
     // 파일을 불러온다
-    int setFileContent(View v);
+    public int setFileContent(View v);
 }

@@ -148,8 +148,6 @@ public class CalcDiff {
 
         // 왼쪽 파일 텍스트를 기준점으로 잡고, 열 단위로 lcs를 수행한다.
         for(int row = 0; row < leftLines.size(); row++ ) {
-            boolean isLeftNotEmpty = false, isRightNotEmpty = false;
-            int emptyPosition = -1;
             // 왼쪽 파일 텍스트와 오른쪽 파일 텍스트 (각각 한줄 씩)에 대해 lcs를 수행한다
             // 결과값은 스트링에 저장되며, 이는 색칠 과정에 사용될 것임.
             String result = lcs(leftLines.get(row).toString(), rightLines.get(row).toString());

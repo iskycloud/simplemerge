@@ -8,6 +8,7 @@ import org.junit.AfterClass;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import static org.easymock.EasyMock.*;
 import org.junit.Assert;
 import sun.jvm.hotspot.utilities.AssertionFailure;
 
@@ -16,11 +17,13 @@ import java.util.ArrayList;
 /**
  * Created by xpathz on 2017. 6. 5..
  */
-public class UnitTest extends TestCase {
+public class UnitTestRunner extends TestCase {
 
+    private FileModelInterface mock;
     private Model model;
 
-    public UnitTest() {
+
+    public UnitTestRunner() {
 
     }
 
@@ -36,6 +39,7 @@ public class UnitTest extends TestCase {
 
     @Before
     public void setUp() {
+        mock = createMock(FileModelInterface.class);
         model = new Model();
     }
 
@@ -44,23 +48,26 @@ public class UnitTest extends TestCase {
 
     }
 
-    // 파일을 정상적으로 불러오고, Line 어레이리스트에 제대로 데이터가 들어가는 지에 대한 유닛 테스트
-    // 성공 : 사전에 정의해둔 스트링들과의 내용과, 파일 모델 안에 있는 라인 스트링 어레이리스트의 내용이 같다.
+    // 파일을 정상적으로 불러오는지에 대한 테스트.
+    // 성공 : 파일모델에 저장된 경로와, 사전에 설정해둔 Mock의 경로가 같다.
     // 실패 : 파일이 존재하지 않거나, 위의 조건을 만족하지 않는다.
     @Test
     public void testLoad() {
         ArrayList<String> result = new ArrayList<String>();
-        String testPath = "/Users/apple/hellogit/src/left.txt"; // 현재 절대경로임
-        result.add("I believe I can fly");
-        result.add("I believe I can touch the sky");
+        String testPath = "/Users/apple/hellogit/src/right.txt"; // 현재 절대경로임
 
         model.leftFileModel.setFilePath(testPath);
         model.leftFileModel.loadLines();
+        assertTrue(model.leftFileModel.isFileLoaded());
 
-        // 본격 테스트
-        for(int i = 0; i < model.leftFileModel.getLines().size(); i++) {
-            assertEquals(result.get(i), model.leftFileModel.getLines().get(i).toString());
-        }
+        //Expectations
+        expect(mock.getFilePath()).andReturn(testPath);
+        expect(mock.isFileLoaded()).andReturn(true);
+        replay(mock);
+
+        assertTrue(mock.isFileLoaded());
+        assertEquals(mock.getFilePath(), model.leftFileModel.getFilePath());
+        verify(mock);
     }
 
     // 파일을 정상적으로 저장하고, 이를 다시 불러와 내용이 제대로 저장되었는지 검증하는 유닛 테스트
@@ -105,6 +112,7 @@ public class UnitTest extends TestCase {
     // 실패 : 파일이 존재하지 않거나, 위의 조건을 만족하지 않는다.
     @Test
     public void testCompare() {
+
         ArrayList<Character> diffChars = new ArrayList<Character>();
         String testPath = "/Users/apple/hellogit/src/left.txt"; // 현재 절대경로임
         String testDestPath = "/Users/apple/hellogit/src/right.txt"; // 현재 절대경로임
@@ -126,14 +134,6 @@ public class UnitTest extends TestCase {
             int diffCharSize = model.leftFileModel.getLines().get(i).getDiffCharSet().size();
             assertEquals(model.leftFileModel.getLines().get(i).toString().length(), lcsLength + diffCharSize);
         }
-    }
 
-    // 한쪽 파일모델에서 다른 쪽 파일모델로 Merge를 수행하고, 이 것이 올바른 결과인지 검증하는 유닛 테스트.
-    // 성공 : 사전에 정의해둔 스트링들과의 내용과, 파일 모델 안에 있는 라인 스트링 어레이리스트의 내용이 같다.
-    // 실패 : 파일이 존재하지 않거나, 위의 조건을 만족하지 않는다.
-    @Test
-    public void testMerge() {
-
-        String expectedResult = "This project looks good.";
     }
 }

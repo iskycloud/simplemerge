@@ -49,6 +49,7 @@ public class FileModel implements FileModelInterface {
 
             in.close();
         } catch (IOException e) {
+            this.setFilePath("");
             e.printStackTrace();
         }
     }
@@ -60,13 +61,6 @@ public class FileModel implements FileModelInterface {
         lines.clear();
         for(int i = 0; i < tmpLines.length; i++) {
             lines.add(new Line(tmpLines[i], 0));
-        }
-    }
-
-    public void editLine(int row, String text) {
-        if ( row < lines.size() ) {
-            if ( lines.get(row).getState() != 0 ) lines.get(row).setState(0);
-            lines.get(row).setString(text);
         }
     }
 
@@ -94,17 +88,6 @@ public class FileModel implements FileModelInterface {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    // 이 클래스의 이름을 정의.
-    // 주로 Left 혹은 Right로 설정될 것.
-    public void setTarget(String t) {
-        this.target = t;
-    }
-
-    // 이름 가져오기.
-    public String getTarget() {
-        return this.target;
     }
 
     public String getFilePath() {

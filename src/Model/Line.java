@@ -17,7 +17,7 @@ public class Line {
         this.state = 0;
     }
 
-    Line(String s, int i) {
+    public Line(String s, int i) {
         this.line = s;
         this.diffCharSet = new ArrayList<Integer>();
         this.state = i;
