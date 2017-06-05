@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 public class CalcDiff {
     // LCS 알고리즘
-    // 갓-위키피디아의 알고리즘과 완죤 똑같음
     public static String lcs(String l, String r) {
         int m = l.length();
         int n = r.length();

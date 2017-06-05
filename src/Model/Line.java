@@ -30,7 +30,6 @@ public class Line {
         }
     }
 
-    //TODO : 추가된 부분임. 라인 수정
     public void setString(String text) { this.line = text; }
 
     @Override

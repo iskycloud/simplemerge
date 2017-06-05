@@ -12,6 +12,5 @@ public class SimpleMerge {
         View view = new View();
         Model model = new Model();
         Controller controller = new Controller(model, view);
-        // 모델 -> 컨트롤러에 연동 예정
     }
 }

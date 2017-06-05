@@ -95,7 +95,7 @@ public class Controller implements ActionListener
                     isCompared = false;
                     view.getFileTextPane(View.TARGET_LEFT).setEditable(false);
                     model.leftFileModel.setLines(view.getFileTextPane(View.TARGET_LEFT).getScrollTextPane().getJTextPane());
-                    view.getFileTextPane(View.TARGET_LEFT).getScrollTextPane().clearColor(); //TODO: 편집 시 색칠 초기화!! (TODO : 추가되었다는 의미)
+                    view.getFileTextPane(View.TARGET_LEFT).getScrollTextPane().clearColor();
                     view.getFileTextPane(View.TARGET_LEFT).setStatusText("편집 완료");
                 } else {
                     view.getFileTextPane(View.TARGET_LEFT).setEditable(true);
@@ -111,7 +111,7 @@ public class Controller implements ActionListener
                     isCompared = false;
                     view.getFileTextPane(View.TARGET_RIGHT).setEditable(false);
                     model.rightFileModel.setLines(view.getFileTextPane(View.TARGET_RIGHT).getScrollTextPane().getJTextPane());
-                    view.getFileTextPane(View.TARGET_RIGHT).getScrollTextPane().clearColor(); //TODO: 편집 시 색칠 초기화!! (TODO : 추가되었다는 의미)
+                    view.getFileTextPane(View.TARGET_RIGHT).getScrollTextPane().clearColor();
                     view.getFileTextPane(View.TARGET_RIGHT).setStatusText("편집 완료");
                 } else {
                     view.getFileTextPane(View.TARGET_RIGHT).setEditable(true);
@@ -137,13 +137,11 @@ public class Controller implements ActionListener
                     view.showMessage("편집 상태인 문서가 있습니다. \n편집 아이콘을 한번 더 눌러 편집을 완료하세요.", "WARNING", JOptionPane.WARNING_MESSAGE);
                 }
             }
-            //TODO: 왼쪽 -> 오른쪽 Merge. 단, CaretListener로 설정된 좌표를 기준으로! (TODO : 추가되었다는 의미)
         } else if (actionName.equals(Controller.BTN_MERGE_LEFT_TO_RIGHT)) {
             if ( isCompared ) {
                 int index = view.getScrollTextPane(Model.LEFT).getDotPosition();
                 if (index != -1) {
                     model.mergeResult(Model.RIGHT, index);
-                    //TODO: 머지했으면 다시 비교해야합니다. (TODO : 추가되었다는 의미)
                     CalcDiff.compareLines(model.leftFileModel.getLines(), model.rightFileModel.getLines(), model.getDiffBlocks(Model.LEFT), model.getDiffBlocks(Model.RIGHT));
                     view.printCompare(model.getFileModel(Model.LEFT).getLines(), model.getFileModel(Model.RIGHT).getLines());
                     view.setLines(Model.LEFT, model.getFileModel(Model.LEFT).getLines());
@@ -153,13 +151,11 @@ public class Controller implements ActionListener
             } else {
                 view.showMessage("Merge 기능을 위해서 \n이전에 Compare을 수행하세요.", "WARNING", JOptionPane.WARNING_MESSAGE);
             }
-            //TODO: 오른쪽 -> 왼쪽 Merge. 단, CaretListener로 설정된 좌표를 기준으로! (TODO : 추가되었다는 의미)
         } else if (actionName.equals(Controller.BTN_MERGE_RIGHT_TO_LEFT)) {
             if ( isCompared ) {
                 int index = view.getScrollTextPane(Model.RIGHT).getDotPosition();
                 if ( index != -1 ) {
                     model.mergeResult(Model.LEFT, index);
-                    //TODO: 머지했으면 다시 비교해야합니다. (TODO : 추가되었다는 의미)
                     CalcDiff.compareLines(model.leftFileModel.getLines(), model.rightFileModel.getLines(), model.getDiffBlocks(Model.LEFT), model.getDiffBlocks(Model.RIGHT));
                     view.printCompare(model.getFileModel(Model.LEFT).getLines(), model.getFileModel(Model.RIGHT).getLines());
                     view.setLines(Model.LEFT, model.getFileModel(Model.LEFT).getLines());
@@ -180,7 +176,6 @@ public class Controller implements ActionListener
             } else {
                 view.showMessage("Merge 기능을 위해서 \n이전에 Compare을 수행하세요.", "WARNING", JOptionPane.WARNING_MESSAGE);
             }
-            //TODO: 오른쪽 -> 왼쪽 Merge. 단, CaretListener로 설정된 좌표를 기준으로! (TODO : 추가되었다는 의미)
         } else if (actionName.equals(Controller.BTN_MERGE_RIGHT_TO_LEFT_ALL)) {
             if ( isCompared ) {
                 model.mergeAll(Model.LEFT);
@@ -192,10 +187,8 @@ public class Controller implements ActionListener
             } else {
                 view.showMessage("Merge 기능을 위해서 \n이전에 Compare을 수행하세요.", "WARNING", JOptionPane.WARNING_MESSAGE);
             }
-            //TODO: 오른쪽 -> 왼쪽 Merge. 단, CaretListener로 설정된 좌표를 기준으로! (TODO : 추가되었다는 의미)
         }
 
-        //TODO: 버튼 이벤트 후에 리페인트 요청. (TODO : 추가되었다는 의미)
         view.getScrollTextPane(Model.LEFT).repaint();
         view.getScrollTextPane(Model.RIGHT).repaint();
     }

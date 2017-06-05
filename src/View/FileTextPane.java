@@ -91,8 +91,6 @@ public class FileTextPane extends JPanel {
         //View에 구현
         txtPath.setText(fm.getFilePath());
         this.setLines(fm.getLines());
-        //TODO : View.java에 양쪽 모두 초기화하는 것으로 수정했는데 추후 수정할 수 있으므로 잠시 둠.
-        //scrTxtPane.clearColor();
     }
 
     public void setLines(ArrayList<Line> lines) {

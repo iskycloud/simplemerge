@@ -46,7 +46,6 @@ public class ScrollTextPane extends JScrollPane implements CaretListener, Action
         return this.txtPane;
     }
 
-    //TODO: 텍스트 칠한 것 초기화 (TODO : 추가되었다는 의미)
     // 모든 색을 제거해줌 = 초기화
     public void clearColor() {
         StyledDocument sDoc = txtPane.getStyledDocument();
@@ -55,7 +54,6 @@ public class ScrollTextPane extends JScrollPane implements CaretListener, Action
         sDoc.setCharacterAttributes(0, txtPane.getText().length(), attrs, true);
     }
 
-    //TODO: 잘 살펴보셈  (TODO : 추가되었다는 의미)
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -84,7 +82,7 @@ public class ScrollTextPane extends JScrollPane implements CaretListener, Action
 
     public void printMark(Graphics g) {
         int startDrawPosition = (int)this.getViewport().getViewPosition().getY();
-        this.clearColor(); //TODO : 색칠하기 전 텍스트 색 초기화
+        this.clearColor();
 
         StyledDocument sDoc = txtPane.getStyledDocument();
         StyleContext sc = StyleContext.getDefaultStyleContext();

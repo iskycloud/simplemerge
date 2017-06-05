@@ -150,7 +150,6 @@ public class View {
         rightFilePane.getScrollTextPane().clearColor();
     }
 
-    // TODO Modify : diffCharSet으로
     // 비교한 결과에 대한 글자 배경 색칠.
     public void printCompare(ArrayList<Line> leftLines, ArrayList<Line> rightLines) {
         clearColor();

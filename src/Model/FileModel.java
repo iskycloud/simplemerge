@@ -66,7 +66,7 @@ public class FileModel implements FileModelInterface {
 
     // 파일이 로드되었는지?
     public boolean isFileLoaded() {
-        if ( getFilePath().compareTo("") != 0 ) {
+        if ( !getFilePath().equals("") ) {
             return true;
         } else {
             return false;

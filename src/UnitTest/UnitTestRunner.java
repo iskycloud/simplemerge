@@ -9,8 +9,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import static org.easymock.EasyMock.*;
-import org.junit.Assert;
-import sun.jvm.hotspot.utilities.AssertionFailure;
 
 import java.util.ArrayList;
 

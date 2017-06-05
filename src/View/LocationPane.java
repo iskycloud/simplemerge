@@ -11,7 +11,6 @@ import java.awt.*;
 public class LocationPane extends JComponent {
     private int widthValue = 56;
     private FileModel leftModel, rightModel;
-    // 의도하고 있는건 비교할때마다 setState해둔거 이용할거임!
 
 
     public LocationPane() {
@@ -36,9 +35,6 @@ public class LocationPane extends JComponent {
         g.setColor(Color.BLACK);
         g.fillRect(27, 2, 2, getHeight());
 
-        // 고려하지 않은 사항 : 페이크라인
-        // 라인 개수에 따라 높이 오차가 발생할 수도 있음. -> 오차는 대부분 마지막에서 표시가 되지만
-        // 이 오차를 또 칠해버리면 되지 않을까 생각해봅
         if ( leftModel != null && rightModel != null ) {
             if ( leftModel.isFileLoaded() && leftModel.getLines().size() > 0 ) {
                 int eachHeight = (this.getHeight() - 4) / leftModel.getLines().size();

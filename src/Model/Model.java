@@ -32,7 +32,7 @@ public class Model {
         else if (s.equals(RIGHT)) {
             return rightFileModel;
         }
-        return null; //TODO Exception
+        return null;
     }
 
     public int setFileContent(View v, String s) {
@@ -56,7 +56,6 @@ public class Model {
         }
     }
 
-    //TODO: 전체 머지
     public void mergeAll(String dest) {
         if ( dest.equals(Model.LEFT) ) {
             for(int x = leftDiffBlocks.size()-1; x >= 0; x--) {
@@ -119,22 +118,14 @@ public class Model {
         }
     }
 
-    //TODO: Merge 작업에 사용된 DiffBlock을 삭제함. (TODO : 추가되었다는 의미)
-    public void deleteDiffBlocks() {
-        leftDiffBlocks.clear();
-        rightDiffBlocks.clear();
-    }
 
-    //TODO: DiffBlock 어레이리스트를 가져온다. (TODO : 추가되었다는 의미)
     public ArrayList<DiffBlock> getDiffBlocks(String orgs) {
         if ( orgs.equals(Model.LEFT) ) return leftDiffBlocks;
         else if ( orgs.equals(Model.RIGHT) ) return rightDiffBlocks;
         return null;
     }
 
-    //TODO: 머지의 결과를 텍스트판에 반영.  (TODO : 추가되었다는 의미)
-    // 근원지와 대상지, 그리고 블록의 시작, 마지막 인덱스를 각각 가져오고,
-    // 이를 바탕으로 substring과 concat을 적절히 이용하여 머지를 실시한다.
+    // 머지 실시
     public void mergeResult(String dest, int index) {
         if ( dest.equals(Model.RIGHT) ) {
             int row = -1;
