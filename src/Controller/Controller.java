@@ -140,9 +140,9 @@ public class Controller implements ActionListener
             //TODO: 왼쪽 -> 오른쪽 Merge. 단, CaretListener로 설정된 좌표를 기준으로! (TODO : 추가되었다는 의미)
         } else if (actionName.equals(Controller.BTN_MERGE_LEFT_TO_RIGHT)) {
             if ( isCompared ) {
-                int index = model.checkMergable(Model.LEFT, view.getScrollTextPane(Model.LEFT).getDotPosition());
+                int index = view.getScrollTextPane(Model.LEFT).getDotPosition();
                 if (index != -1) {
-                    model.mergeResult(Model.RIGHT, index, view.getScrollTextPane(Model.LEFT).getJTextPane());
+                    model.mergeResult(Model.RIGHT, index);
                     //TODO: 머지했으면 다시 비교해야합니다. (TODO : 추가되었다는 의미)
                     CalcDiff.compareLines(model.leftFileModel.getLines(), model.rightFileModel.getLines(), model.getDiffBlocks(Model.LEFT), model.getDiffBlocks(Model.RIGHT));
                     view.printCompare(model.getFileModel(Model.LEFT).getLines(), model.getFileModel(Model.RIGHT).getLines());
@@ -156,9 +156,9 @@ public class Controller implements ActionListener
             //TODO: 오른쪽 -> 왼쪽 Merge. 단, CaretListener로 설정된 좌표를 기준으로! (TODO : 추가되었다는 의미)
         } else if (actionName.equals(Controller.BTN_MERGE_RIGHT_TO_LEFT)) {
             if ( isCompared ) {
-                int index = model.checkMergable(Model.RIGHT, view.getScrollTextPane(Model.RIGHT).getDotPosition());
+                int index = view.getScrollTextPane(Model.RIGHT).getDotPosition();
                 if ( index != -1 ) {
-                    model.mergeResult(Model.LEFT, index, view.getScrollTextPane(Model.RIGHT).getJTextPane());
+                    model.mergeResult(Model.LEFT, index);
                     //TODO: 머지했으면 다시 비교해야합니다. (TODO : 추가되었다는 의미)
                     CalcDiff.compareLines(model.leftFileModel.getLines(), model.rightFileModel.getLines(), model.getDiffBlocks(Model.LEFT), model.getDiffBlocks(Model.RIGHT));
                     view.printCompare(model.getFileModel(Model.LEFT).getLines(), model.getFileModel(Model.RIGHT).getLines());
@@ -171,7 +171,7 @@ public class Controller implements ActionListener
             }
         } else if (actionName.equals(Controller.BTN_MERGE_LEFT_TO_RIGHT_ALL)) {
             if ( isCompared ) {
-                model.mergeAll(Model.LEFT, view.getScrollTextPane(Model.LEFT).getJTextPane(), view.getScrollTextPane(Model.RIGHT).getJTextPane());
+                model.mergeAll(Model.RIGHT);
                 CalcDiff.compareLines(model.leftFileModel.getLines(), model.rightFileModel.getLines(), model.getDiffBlocks(Model.LEFT), model.getDiffBlocks(Model.RIGHT));
                 view.printCompare(model.getFileModel(Model.LEFT).getLines(), model.getFileModel(Model.RIGHT).getLines());
                 view.setLines(Model.LEFT, model.getFileModel(Model.LEFT).getLines());
@@ -183,7 +183,7 @@ public class Controller implements ActionListener
             //TODO: 오른쪽 -> 왼쪽 Merge. 단, CaretListener로 설정된 좌표를 기준으로! (TODO : 추가되었다는 의미)
         } else if (actionName.equals(Controller.BTN_MERGE_RIGHT_TO_LEFT_ALL)) {
             if ( isCompared ) {
-                model.mergeAll(Model.RIGHT, view.getScrollTextPane(Model.LEFT).getJTextPane(), view.getScrollTextPane(Model.RIGHT).getJTextPane());
+                model.mergeAll(Model.LEFT);
                 CalcDiff.compareLines(model.leftFileModel.getLines(), model.rightFileModel.getLines(), model.getDiffBlocks(Model.LEFT), model.getDiffBlocks(Model.RIGHT));
                 view.printCompare(model.getFileModel(Model.LEFT).getLines(), model.getFileModel(Model.RIGHT).getLines());
                 view.setLines(Model.LEFT, model.getFileModel(Model.LEFT).getLines());

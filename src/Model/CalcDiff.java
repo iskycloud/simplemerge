@@ -61,10 +61,12 @@ public class CalcDiff {
                 // 왼쪽 = 공백라인 O, 오른쪽 = 공백라인 X
                 if (leftLines.get(row).toString().trim().length() == 0 && rightLines.get(row).toString().trim().length() != 0) {
                     rightLines.add(row, fakeLine);
+                    //leftLines.get(row).setState(1);
                 }
                 // 왼쪽 = 공백라인 X, 오른쪽 = 공백라인 O
                 else if (leftLines.get(row).toString().trim().length() != 0 && rightLines.get(row).toString().trim().length() == 0) {
                     leftLines.add(row, fakeLine);
+                    //rightLines.get(row).setState(1);
                 }
                 // 왼쪽 = 공백라인 O, 오른쪽 = 공백라인 O -> continue
                 // 왼쪽 = 공백라인 X, 오른쪽 = 공백라인 X
@@ -167,18 +169,8 @@ public class CalcDiff {
                         // 글자가 일치하지 않으면, 추가
                         leftLines.get(row).setState(1);
                         leftLines.get(row).getDiffCharSet().add(prevLeftAddress + i);
-                        if (firstAddress == -1) {
-                            firstAddress = prevLeftAddress + i;
-                        }
                     } else { // 일치하면 다음 어드레스로 넘김
-                        if (firstAddress != -1 && lastAddress == -1) {
-                            lastAddress = prevLeftAddress + i - 1;
-                            leftDiffBlocks.add(new DiffBlock(firstAddress, lastAddress));//TODO: 왼쪽 텍스트에서 차이가 나는 부분을 DiffBlock으로 저장.  (TODO : 추가되었다는 의미)
-                            emptyPosition = firstAddress;
-                            firstAddress = -1;
-                            lastAddress = -1;
-                            isLeftNotEmpty = true;
-                        }
+
                         lastLeftAddress = i;
                         address++;
                     }
@@ -195,24 +187,10 @@ public class CalcDiff {
                             firstAddress = prevRightAddress + i;
                         }
                     } else { // 일치하면 다음 어드레스로 넘김
-                        if (firstAddress != -1 && lastAddress == -1) {
-                            lastAddress = prevRightAddress + i - 1;
-                            rightDiffBlocks.add(new DiffBlock(firstAddress, lastAddress));//TODO: 오른쪽 텍스트에서 차이가 나는 부분을 DiffBlock으로 저장.  (TODO : 추가되었다는 의미)
-                            emptyPosition = firstAddress;
-                            firstAddress = -1;
-                            lastAddress = -1;
-                            isRightNotEmpty = true;
-                        }
+
                         lastRightAddress = i;
                         address++;
                     }
-                }
-
-                //왼쪽이 비어있다
-                if ( !isLeftNotEmpty && isRightNotEmpty) {
-                    leftDiffBlocks.add(new DiffBlock(emptyPosition,emptyPosition));
-                } else if ( isLeftNotEmpty && !isRightNotEmpty ) { // 오른쪽이 비어있다.
-                    rightDiffBlocks.add(new DiffBlock(emptyPosition,emptyPosition));
                 }
 
                 // 비교 결과 후, 이후의 텍스트들은 차이점임을 의미하므로, 이후의 텍스트들을 모두 결과에 포함시킴.
@@ -221,12 +199,6 @@ public class CalcDiff {
                         leftLines.get(row).setState(1);
                         leftLines.get(row).getDiffCharSet().add(prevLeftAddress + i);
                     }
-
-                    int startAddress = prevLeftAddress + lastLeftAddress + 1;
-                    int finishAddress = prevLeftAddress + leftLines.get(row).toString().length() - 1;
-                    //TODO: 왼쪽 부분은 가장 끝 인덱스 두개를 저장합니다. (TODO : 추가되었다는 의미)
-                    rightDiffBlocks.add(new DiffBlock(prevRightAddress + rightLines.get(row).toString().length(), prevRightAddress + rightLines.get(row).toString().length()));
-                    leftDiffBlocks.add(new DiffBlock(startAddress, finishAddress)); //TODO: 왼쪽 텍스트에서 차이가 나는 부분을 DiffBlock으로 저장.  (TODO : 추가되었다는 의미)
                 }
 
                 if (rightLines.get(row).toString().length() - 1 > lastRightAddress) {
@@ -234,13 +206,6 @@ public class CalcDiff {
                         rightLines.get(row).setState(1);
                         rightLines.get(row).getDiffCharSet().add(prevRightAddress + i);
                     }
-
-                    int startAddress = prevRightAddress + lastRightAddress + 1;
-                    int finishAddress = prevRightAddress + rightLines.get(row).toString().length() - 1;
-
-                    //TODO: 왼쪽 부분은 가장 끝 인덱스 두개를 저장합니다. (TODO : 추가되었다는 의미)
-                    leftDiffBlocks.add(new DiffBlock(prevLeftAddress + leftLines.get(row).toString().length(), prevLeftAddress + leftLines.get(row).toString().length()));
-                    rightDiffBlocks.add(new DiffBlock(startAddress, finishAddress)); //TODO: 오른쪽 텍스트에서 차이가 나는 부분을 DiffBlock으로 저장.  (TODO : 추가되었다는 의미)
                 }
             } else {
                 // 페이크라인
@@ -248,36 +213,35 @@ public class CalcDiff {
                     for (int i = prevLeftAddress; i < prevLeftAddress + leftLines.get(row).toString().length(); i++) {
                         leftLines.get(row).getDiffCharSet().add(i);
                     }
-                    leftDiffBlocks.add(new DiffBlock(prevLeftAddress, prevLeftAddress + leftLines.get(row).toString().length()));
-                    rightDiffBlocks.add(new DiffBlock(prevRightAddress, prevRightAddress));
                     leftLines.get(row).setState(1);
                 } else if (leftLines.get(row).getState() == -1 && rightLines.get(row).getState() != -1 && rightLines.get(row).toString().length() > 0) {
                     for (int i = prevRightAddress; i < prevRightAddress + rightLines.get(row).toString().length(); i++) {
                         rightLines.get(row).getDiffCharSet().add(i);
                     }
-                    rightDiffBlocks.add(new DiffBlock(prevRightAddress, prevRightAddress + rightLines.get(row).toString().length()));
-                    leftDiffBlocks.add(new DiffBlock(prevLeftAddress, prevLeftAddress));
                     rightLines.get(row).setState(1);
                 } else { // 페이크라인이 아님
                     if ( leftLines.get(row).toString().length() > 0 ) {
                         for (int i = prevLeftAddress; i < prevLeftAddress + leftLines.get(row).toString().length(); i++) {
                             leftLines.get(row).getDiffCharSet().add(i);
                         }
-                        leftDiffBlocks.add(new DiffBlock(prevLeftAddress, prevLeftAddress + leftLines.get(row).toString().length()));
-                        rightDiffBlocks.add(new DiffBlock(prevRightAddress, prevRightAddress));
                         leftLines.get(row).setState(1);
                     }
                     if ( rightLines.get(row).toString().length() > 0 ) {
                         for (int i = prevRightAddress; i < prevRightAddress + rightLines.get(row).toString().length(); i++) {
                             rightLines.get(row).getDiffCharSet().add(i);
                         }
-                        rightDiffBlocks.add(new DiffBlock(prevRightAddress, prevRightAddress + rightLines.get(row).toString().length()));
-                        leftDiffBlocks.add(new DiffBlock(prevLeftAddress, prevLeftAddress));
                         rightLines.get(row).setState(1);
                     }
                 }
             }
 
+            if (leftLines.get(row).getState() == 0 && rightLines.get(row).getState() == -1) {
+                leftLines.get(row).setState(1);
+            }
+
+            if (rightLines.get(row).getState() == 0 && leftLines.get(row).getState() == -1) {
+                rightLines.get(row).setState(1);
+            }
 
             if (leftLines.get(row).getState() == 0 && rightLines.get(row).getState() == 1) {
                 leftLines.get(row).setState(1);
@@ -287,30 +251,16 @@ public class CalcDiff {
                 rightLines.get(row).setState(1);
             }
 
+            if ( leftLines.get(row).getState() != 0 || rightLines.get(row).getState() != 0) {
+                leftDiffBlocks.add(new DiffBlock(row));
+                rightDiffBlocks.add(new DiffBlock(row));
+            }
+
             // 가장 마지막 위치의 어드레스를 기준으로 다음 어드레스를 저장한다.
             // 이들을 저장하는 이유는, 색칠할 때 오프셋으로 적용시킬 것이기 때문이다.
             // 제이텍스트판에 사용될 도큐먼트의 오프셋이 첫줄부터 끝줄까지 연속되기 때문.
             prevLeftAddress += leftLines.get(row).toString().length() + 1;
             prevRightAddress += rightLines.get(row).toString().length() + 1;
         }
-
-        // 다른 글자가 포함된 라인의 시작과 끝 인덱스를 ArrayList에 저장한다.
-        /*
-        int firstDiffLine = -1, lastDiffLine = -1;
-        for (int row = 0; row < leftLines.size(); row++) {
-            if (leftLines.get(row).getState() != 0 && firstDiffLine < 0) {
-                firstDiffLine = row;
-            }
-            else if (leftLines.get(row).getState() != 0 && firstDiffLine >= 0) {
-                lastDiffLine = row;
-            }
-            else if (leftLines.get(row).getState() == 0 && firstDiffLine >= 0) {
-                System.out.println(firstDiffLine + "/" + lastDiffLine);
-                diffBlocks.add(new DiffBlock(firstDiffLine, lastDiffLine));
-                firstDiffLine = -1;
-                lastDiffLine = -1;
-            }
-        }
-        */
     }
 }
