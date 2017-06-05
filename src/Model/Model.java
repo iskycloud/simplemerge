@@ -10,7 +10,7 @@ import javax.swing.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class Model {
+public class Model implements ModelInterface {
 
     // 상수 : 주로 패널의 왼쪽 오른쪽 구분을 위해 사용될 것임.
     public final static String LEFT = "Left";
@@ -49,7 +49,9 @@ public class Model {
     public void compareLines() {
         // 둘다 파일 경로가 올바른지?
         if ( leftFileModel.isFileLoaded() && rightFileModel.isFileLoaded() ) {
-            CalcDiff.addFakeLine(leftFileModel.getLines(), rightFileModel.getLines());
+            if ( leftFileModel.getLines().size() != rightFileModel.getLines().size() ) {
+                CalcDiff.addFakeLine(leftFileModel.getLines(), rightFileModel.getLines());
+            }
             CalcDiff.compareLines(leftFileModel.getLines(), rightFileModel.getLines(), leftDiffBlocks, rightDiffBlocks);
         }
     }

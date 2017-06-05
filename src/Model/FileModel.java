@@ -9,7 +9,7 @@ import View.View;
 /**
  * Created by xpathz on 2017. 5. 18..
  */
-public class FileModel {
+public class FileModel implements FileModelInterface {
     private String target;
     private String filePath;
     private ArrayList<Line> lines;
@@ -56,7 +56,7 @@ public class FileModel {
     // 편집 후의 텍스트판을 가져와
     // 새로운 어레이리스트로 읽음.
     public void setLines(JTextPane jp) {
-        String[] tmpLines = jp.getText().split("\n");
+        String[] tmpLines = jp.getText().split(System.getProperty("line.separator"));
         lines.clear();
         for(int i = 0; i < tmpLines.length; i++) {
             lines.add(new Line(tmpLines[i], 0));
@@ -65,7 +65,7 @@ public class FileModel {
 
     public void editLine(int row, String text) {
         if ( row < lines.size() ) {
-            if ( lines.get(row).getState() == -1 ) lines.get(row).setState(0);
+            if ( lines.get(row).getState() != 0 ) lines.get(row).setState(0);
             lines.get(row).setString(text);
         }
     }

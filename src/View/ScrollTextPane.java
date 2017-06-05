@@ -9,11 +9,15 @@ import Model.*;
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.text.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class ScrollTextPane extends JScrollPane implements CaretListener {
+public class ScrollTextPane extends JScrollPane implements CaretListener, ActionListener {
     private final static Color COLOR_NORMAL = new Color(255, 255, 255, 128);       // WHITE
     private final static Color COLOR_DIFF_STRING = new Color(255, 200, 0, 128);	// ORANGE
     private final static Color COLOR_DIFF_LINE = new Color(255, 175, 175, 128);	// PINK
@@ -30,9 +34,12 @@ public class ScrollTextPane extends JScrollPane implements CaretListener {
 
     private void initialize() {
         txtPane = new JTextPane();
-        super.setViewportView(txtPane);
+        JPanel noWrapPanel = new JPanel( new BorderLayout() );
+        noWrapPanel.add(txtPane);
+        super.setViewportView(noWrapPanel);
         lineHeight = txtPane.getFontMetrics(txtPane.getFont()).getHeight();
         txtPane.addCaretListener(this);
+
     }
 
     public JTextPane getJTextPane() {
@@ -58,6 +65,10 @@ public class ScrollTextPane extends JScrollPane implements CaretListener {
 
     }
 
+    public void actionPerformed(ActionEvent e) {
+        this.repaint();
+    }
+
     public int getDotPosition() { return this.dotPosition; }
 
     public void caretUpdate(CaretEvent e) {
@@ -72,6 +83,7 @@ public class ScrollTextPane extends JScrollPane implements CaretListener {
     }
 
     public void printMark(Graphics g) {
+        int startDrawPosition = (int)this.getViewport().getViewPosition().getY();
         this.clearColor(); //TODO : 색칠하기 전 텍스트 색 초기화
 
         StyledDocument sDoc = txtPane.getStyledDocument();
@@ -85,46 +97,13 @@ public class ScrollTextPane extends JScrollPane implements CaretListener {
                 }
 
                 g.setColor(ScrollTextPane.COLOR_DIFF_LINE);
-                g.fillRect(1,2+ lineHeight * i, getWidth()-2, lineHeight);
+                g.fillRect(1,2+ lineHeight * i - startDrawPosition, getWidth()-2, lineHeight);
             } else if ( lines.get(i).getState() == -1 ) {
                 g.setColor(ScrollTextPane.COLOR_DIFF_FAKE_LINE);
-                g.fillRect(1,2+ lineHeight * i, getWidth()-2, lineHeight);
+                g.fillRect(1,2+ lineHeight * i - startDrawPosition, getWidth()-2, lineHeight);
             }
         }
 
         this.repaint();
     }
 }
-/*
-class LineHighlightTextPaneUI extends BasicTextPaneUI {
-
-    JTextPane tc;
-
-    LineHighlightTextPaneUI (JTextPane t) {
-
-        tc = t;
-        tc.addCaretListener (new CaretListener() {
-            public void caretUpdate (CaretEvent e) {
-
-                tc.repaint ();
-            }
-        });
-    }
-
-    @Override
-    public void paintBackground (Graphics g) {
-
-        super.paintBackground (g);
-
-        try {
-            Rectangle rect = modelToView(tc, tc.getCaretPosition ());
-            int y = rect.y;
-            int h = rect.height;
-            g.setColor (Color.YELLOW);
-            g.fillRect (0, y, tc.getWidth (), h);
-        } catch (BadLocationException ex) {
-            ex.printStackTrace();
-        }
-    }
-}
-*/

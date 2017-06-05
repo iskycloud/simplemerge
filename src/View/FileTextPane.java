@@ -100,7 +100,7 @@ public class FileTextPane extends JPanel {
         for (int i = 0; i < lines.size(); i++) {
             scrTxtPane.getJTextPane().setText(scrTxtPane.getJTextPane().getText() + lines.get(i));
             if (i != lines.size() - 1) {
-                scrTxtPane.getJTextPane().setText(scrTxtPane.getJTextPane().getText() + '\n');
+                scrTxtPane.getJTextPane().setText(scrTxtPane.getJTextPane().getText() + System.getProperty("line.separator"));
             }
         }
     }
