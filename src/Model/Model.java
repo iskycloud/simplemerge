@@ -73,8 +73,6 @@ public class Model implements ModelInterface {
     }
 
     //TODO: 전체 머지
-    //TODO: 버그 사항 = 한 줄씩 채워나가다보니까 그 글자가 변동되면 전체 어드레스가 바뀌어 일부 블록이 제대로 반영 안되는 경우가 있음
-    //TODO: 이를 위한 해결책? : 레프트블록과 라이트블록의 어드레스 길이 차이를 이용해서 보정해주면 가능할 것 같은데 이는 내가 연구해보겠음.
     public void mergeAll(String orgs, JTextPane left, JTextPane right) {
         if ( orgs.equals(Model.LEFT) ) {
             for(int x = leftDiffBlocks.size()-1; x >= 0; x--) {
@@ -85,17 +83,49 @@ public class Model implements ModelInterface {
                 int finishOrgPos = this.leftDiffBlocks.get(x).getLast();
 
                 for (int i = 0, address = 0; i < rightFileModel.getLines().size(); i++) {
-                    if ( startDestPos <= address + rightFileModel.getLines().get(i).toString().length()) {
-                        String newLine = this.rightFileModel.getLines().get(i).toString().substring(0, startDestPos - address);
-                        newLine += left.getText().substring(startOrgPos, finishOrgPos + 1);
-                        if (finishDestPos - address + 1 < this.rightFileModel.getLines().get(i).toString().length() + 1) {
-                            newLine += this.rightFileModel.getLines().get(i).toString().substring(finishDestPos - address + 1);
+                    if ( startDestPos >= address && finishDestPos <= address + rightFileModel.getLines().get(i).toString().length()) {
+                        if ( rightFileModel.getLines().get(i).getState() == -1 || (finishDestPos - startDestPos) == rightFileModel.getLines().get(i).toString().length() ) {
+                            rightFileModel.getLines().remove(i);
+                            if ( i > rightFileModel.getLines().size() ) {
+                                rightFileModel.getLines().add(new Line(leftFileModel.getLines().get(i).toString(), 0));
+                            } else {
+                                rightFileModel.getLines().add(i, new Line(leftFileModel.getLines().get(i).toString(), 0));
+                            }
+                            leftFileModel.getLines().get(i).setState(0);
+                            rightFileModel.getLines().get(i).setState(0);
+                            break;
+                        } else {
+                            String newLine;
+                            if ( startDestPos - address < 0 ) {
+                                newLine = this.rightFileModel.getLines().get(i).toString().substring(0, 0);
+                            } else {
+                                newLine = this.rightFileModel.getLines().get(i).toString().substring(0, startDestPos - address);
+                            }
+                            newLine += left.getText().substring(startOrgPos, finishOrgPos + 1);
+                            if ( startDestPos == finishDestPos ) {
+                                newLine += this.rightFileModel.getLines().get(i).toString().substring(finishDestPos - address);
+                            } else {
+                                newLine += this.rightFileModel.getLines().get(i).toString().substring(finishDestPos - address + 1);
+                            }
+                            if ( newLine.contains(System.getProperty("line.separator"))) newLine = newLine.substring(0, newLine.indexOf(System.getProperty("line.separator")));
+                            rightFileModel.getLines().get(i).setString(newLine);
+                            break;
                         }
-                        rightFileModel.getLines().get(i).setString(newLine);
-                        break;
                     }
 
                     address += (rightFileModel.getLines().get(i).toString().length() + 1);
+                }
+            }
+            for(int i = 0; i < rightFileModel.getLines().size(); i++) {
+                if ( rightFileModel.getLines().get(i).getState() == -1 ) {
+                    rightFileModel.getLines().remove(i);
+                    if ( i > rightFileModel.getLines().size() ) {
+                        rightFileModel.getLines().add(new Line("", 0));
+                    } else {
+                        rightFileModel.getLines().add(i, new Line("", 0));
+                    }
+                    leftFileModel.getLines().get(i).setState(0);
+                    rightFileModel.getLines().get(i).setState(0);
                 }
             }
         } else if ( orgs.equals(Model.RIGHT) ) {
@@ -107,17 +137,50 @@ public class Model implements ModelInterface {
                 int finishOrgPos = this.rightDiffBlocks.get(x).getLast();
 
                 for (int i = 0, address = 0; i < leftFileModel.getLines().size(); i++) {
-                    if ( startDestPos <= address + leftFileModel.getLines().get(i).toString().length()) {
-                        String newLine = this.leftFileModel.getLines().get(i).toString().substring(0, startDestPos - address);
-                        newLine += right.getText().substring(startOrgPos, finishOrgPos + 1);
-                        if (finishDestPos - address + 1 < this.leftFileModel.getLines().get(i).toString().length() + 1) {
-                            newLine += this.leftFileModel.getLines().get(i).toString().substring(finishDestPos - address + 1);
+                    if (startDestPos >= address && finishDestPos <= address + leftFileModel.getLines().get(i).toString().length()) {
+                        if ( leftFileModel.getLines().get(i).getState() == -1 || (finishDestPos - startDestPos) == leftFileModel.getLines().get(i).toString().length() ) {
+                            leftFileModel.getLines().remove(i);
+                            if ( i > leftFileModel.getLines().size() ) {
+                                leftFileModel.getLines().add(new Line(rightFileModel.getLines().get(i).toString(), 0));
+                            } else {
+                                leftFileModel.getLines().add(i, new Line(rightFileModel.getLines().get(i).toString(), 0));
+                            }
+                            leftFileModel.getLines().get(i).setState(0);
+                            rightFileModel.getLines().get(i).setState(0);
+                            break;
+                        } else {
+                            String newLine;
+                            if ( startDestPos - address < 0 ) {
+                                newLine = this.leftFileModel.getLines().get(i).toString().substring(0, 0);
+                            } else {
+                                newLine = this.leftFileModel.getLines().get(i).toString().substring(0, startDestPos - address);
+                            }
+                            newLine += right.getText().substring(startOrgPos, finishOrgPos + 1);
+                            if ( startDestPos == finishDestPos ) {
+                                newLine += this.leftFileModel.getLines().get(i).toString().substring(finishDestPos - address);
+                            } else {
+                                newLine += this.leftFileModel.getLines().get(i).toString().substring(finishDestPos - address + 1);
+                            }
+                            if ( newLine.contains(System.getProperty("line.separator"))) newLine = newLine.substring(0, newLine.indexOf(System.getProperty("line.separator")));
+                            leftFileModel.getLines().get(i).setString(newLine);
+                            break;
                         }
-                        leftFileModel.getLines().get(i).setString(newLine);
-                        break;
                     }
 
                     address += (leftFileModel.getLines().get(i).toString().length() + 1);
+                }
+            }
+
+            for(int i = 0; i < leftFileModel.getLines().size(); i++) {
+                if ( leftFileModel.getLines().get(i).getState() == -1 ) {
+                    leftFileModel.getLines().remove(i);
+                    if ( i > leftFileModel.getLines().size() ) {
+                        leftFileModel.getLines().add(new Line("", 0));
+                    } else {
+                        leftFileModel.getLines().add(i, new Line("", 0));
+                    }
+                    leftFileModel.getLines().get(i).setState(0);
+                    rightFileModel.getLines().get(i).setState(0);
                 }
             }
         }
@@ -149,20 +212,39 @@ public class Model implements ModelInterface {
 
             int row = -1;
             int address = 0;
-            for(int i = 0; i < rightFileModel.getLines().size(); address += rightFileModel.getLines().get(i).toString().length() + 1, i++) {
-                if ( startDestPos <= address + rightFileModel.getLines().get(i).toString().length()) {
+            for(int i = 0; i < leftFileModel.getLines().size(); address += leftFileModel.getLines().get(i).toString().length() + 1, i++) {
+                if ( startOrgPos <= address + leftFileModel.getLines().get(i).toString().length()) {
                     row = i;
                     break;
                 }
             }
 
             if ( row != -1 ) {
-                String newLine = this.rightFileModel.getLines().get(row).toString().substring(0, startDestPos - address);
-                newLine += orgP.getText().substring(startOrgPos, finishOrgPos+1);
-                if ( finishDestPos - address + 1 < this.rightFileModel.getLines().get(row).toString().length() + 1 ) {
-                    newLine += this.rightFileModel.getLines().get(row).toString().substring(finishDestPos - address + 1);
+                if ( rightFileModel.getLines().get(row).getState() == -1 || (finishDestPos - startDestPos) == rightFileModel.getLines().get(row).toString().length() ) {
+                    rightFileModel.getLines().remove(row);
+                    if ( row > rightFileModel.getLines().size() ) {
+                        rightFileModel.getLines().add(new Line(leftFileModel.getLines().get(row).toString(), 0));
+                    } else {
+                        rightFileModel.getLines().add(row, new Line(leftFileModel.getLines().get(row).toString(), 0));
+                    }
+                    leftFileModel.getLines().get(row).setState(0);
+                    rightFileModel.getLines().get(row).setState(0);
+                } else {
+                    String newLine;
+                    if ( startDestPos - address < 0 ) {
+                        newLine = this.rightFileModel.getLines().get(row).toString().substring(0, 0);
+                    } else {
+                        newLine = this.rightFileModel.getLines().get(row).toString().substring(0, startDestPos - address);
+                    }
+                    newLine += orgP.getText().substring(startOrgPos, finishOrgPos + 1);
+                    if ( startDestPos == finishDestPos ) {
+                        newLine += this.rightFileModel.getLines().get(row).toString().substring(finishDestPos - address);
+                    } else {
+                        newLine += this.rightFileModel.getLines().get(row).toString().substring(finishDestPos - address + 1);
+                    }
+                    if ( newLine.contains(System.getProperty("line.separator"))) newLine = newLine.substring(0, newLine.indexOf(System.getProperty("line.separator")));
+                    rightFileModel.getLines().get(row).setString(newLine);
                 }
-                rightFileModel.getLines().get(row).setString(newLine);
                 //System.out.println(newLine);
             }
 
@@ -175,33 +257,43 @@ public class Model implements ModelInterface {
 
             int row = -1;
             int address = 0;
-            for(int i = 0; i < leftFileModel.getLines().size(); i++) {
-                if ( startDestPos <= address && finishDestPos >= address ) {
+            for(int i = 0; i < rightFileModel.getLines().size(); address += rightFileModel.getLines().get(i).toString().length() + 1, i++) {
+                if ( startOrgPos <= address + rightFileModel.getLines().get(i).toString().length()) {
                     row = i;
                     break;
                 }
-                address += leftFileModel.getLines().get(i).toString().length() + 1;
             }
 
             if ( row != -1 ) {
-                String newLine = this.leftFileModel.getLines().get(row).toString().substring(0, startDestPos - address);
-                newLine += orgP.getText().substring(startOrgPos, finishOrgPos+1);
-                if ( finishDestPos - address + 1 < this.leftFileModel.getLines().get(row).toString().length() + 1 ) {
-                    newLine += this.leftFileModel.getLines().get(row).toString().substring(finishDestPos - address + 1);
+                if ( leftFileModel.getLines().get(row).getState() == -1 || (finishDestPos - startDestPos) == leftFileModel.getLines().get(row).toString().length() ) {
+                    leftFileModel.getLines().remove(row);
+                    if ( row > leftFileModel.getLines().size() ) {
+                        leftFileModel.getLines().add(new Line(rightFileModel.getLines().get(row).toString(), 0));
+                    } else {
+                        leftFileModel.getLines().add(row, new Line(rightFileModel.getLines().get(row).toString(), 0));
+                    }
+                    leftFileModel.getLines().get(row).setState(0);
+                    rightFileModel.getLines().get(row).setState(0);
+                } else {
+                    String newLine;
+                    if ( startDestPos - address < 0 ) {
+                        newLine = this.leftFileModel.getLines().get(row).toString().substring(0, 0);
+                    } else {
+                        newLine = this.leftFileModel.getLines().get(row).toString().substring(0, startDestPos - address);
+                    }
+                    newLine += orgP.getText().substring(startOrgPos, finishOrgPos + 1);
+                    if ( startDestPos == finishDestPos ) {
+                        newLine += this.leftFileModel.getLines().get(row).toString().substring(finishDestPos - address);
+                    } else {
+                        newLine += this.leftFileModel.getLines().get(row).toString().substring(finishDestPos - address + 1);
+                    }
+                    if ( newLine.contains(System.getProperty("line.separator"))) newLine = newLine.substring(0, newLine.indexOf(System.getProperty("line.separator")));
+                    leftFileModel.getLines().get(row).setString(newLine);
                 }
-                leftFileModel.getLines().get(row).setString(newLine);
                 //System.out.println(newLine);
             }
 
         }
-        /*
-        String copy = this.getScrollTextPane(orgs).getJTextPane().getText().substring(startOrgPos, endOrgPos+1);
-        String copied = this.getScrollTextPane(dest).getJTextPane().getText().substring(0, startDstPos);
-        copied += copy;
-        copied += this.getScrollTextPane(dest).getJTextPane().getText().substring(endDstPos+1);
-
-        getScrollTextPane(dest).getJTextPane().setText(copied);
-        */
     }
 
 }

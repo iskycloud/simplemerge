@@ -143,7 +143,6 @@ public class Controller implements ActionListener
                 int index = model.checkMergable(Model.LEFT, view.getScrollTextPane(Model.LEFT).getDotPosition());
                 if (index != -1) {
                     model.mergeResult(Model.RIGHT, index, view.getScrollTextPane(Model.LEFT).getJTextPane());
-
                     //TODO: 머지했으면 다시 비교해야합니다. (TODO : 추가되었다는 의미)
                     CalcDiff.compareLines(model.leftFileModel.getLines(), model.rightFileModel.getLines(), model.getDiffBlocks(Model.LEFT), model.getDiffBlocks(Model.RIGHT));
                     view.printCompare(model.getFileModel(Model.LEFT).getLines(), model.getFileModel(Model.RIGHT).getLines());
@@ -165,7 +164,7 @@ public class Controller implements ActionListener
                     view.printCompare(model.getFileModel(Model.LEFT).getLines(), model.getFileModel(Model.RIGHT).getLines());
                     view.setLines(Model.LEFT, model.getFileModel(Model.LEFT).getLines());
                     view.setLines(Model.RIGHT, model.getFileModel(Model.RIGHT).getLines());
-                    view.getLocPane().repaint(); // DO NOT REMOVE!! 컴포넌트 다시 그려줄 것을 호출
+                    view.getLocPane().repaint();
                 }
             } else {
                 view.showMessage("Merge 기능을 위해서 \n이전에 Compare을 수행하세요.", "WARNING", JOptionPane.WARNING_MESSAGE);
