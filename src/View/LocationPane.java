@@ -1,13 +1,9 @@
 package View;
 
 import Model.FileModel;
-
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by xpathz on 2017. 5. 28..
- */
 public class LocationPane extends JComponent {
     private int widthValue = 56;
     private FileModel leftModel, rightModel;

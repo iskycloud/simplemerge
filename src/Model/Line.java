@@ -1,7 +1,3 @@
-/**
- * Created by iskyc on 2017-05-20.
- */
-
 package Model;
 
 import java.util.ArrayList;

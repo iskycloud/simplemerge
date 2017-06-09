@@ -1,7 +1,3 @@
-/**
- * Created by iskyc on 2017-05-19.
- */
-
 package View;
 
 import javax.swing.*;

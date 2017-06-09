@@ -12,16 +12,10 @@ import org.junit.AfterClass;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-
-
 import javax.swing.*;
-
 import static java.lang.Thread.sleep;
-import static org.junit.Assert.*;
 
-/**
- * Created by xstel on 2017-06-04.
- */
+
 public class GUITestRunner extends TestCase {
     private FrameFixture frameFixture;
     private Robot robot;
@@ -100,7 +94,7 @@ public class GUITestRunner extends TestCase {
 
     // 버튼 이벤트 테스트. (Dialog가 나와야함. 안그러면 Assert 에러 처리.)
     @Test
-    public void testClickMergeBtn0() throws Exception {
+    public void testClickBtnCompare() throws Exception {
         frameFixture.button(Controller.BTN_COMPARE).click();
         frameFixture.dialog().requireVisible();
         sleep(2000);
@@ -108,7 +102,7 @@ public class GUITestRunner extends TestCase {
 
     // 버튼 이벤트 테스트. (Dialog가 나와야함. 안그러면 Assert 에러 처리.)
     @Test
-    public void testClickMergeBtn1() throws Exception {
+    public void testClickBtnMergeLeftToRight() throws Exception {
         frameFixture.button(Controller.BTN_MERGE_LEFT_TO_RIGHT).click();
         frameFixture.dialog().requireVisible();
         sleep(2000);
@@ -116,7 +110,7 @@ public class GUITestRunner extends TestCase {
 
     // 버튼 이벤트 테스트. (Dialog가 나와야함. 안그러면 Assert 에러 처리.)
     @Test
-    public void testClickMergeBtn2() throws Exception {
+    public void testClickBtnMergeLeftToRightAll() throws Exception {
         frameFixture.button(Controller.BTN_MERGE_LEFT_TO_RIGHT_ALL).click();
         frameFixture.dialog().requireVisible();
         sleep(2000);
@@ -124,7 +118,7 @@ public class GUITestRunner extends TestCase {
 
     // 버튼 이벤트 테스트. (Dialog가 나와야함. 안그러면 Assert 에러 처리.)
     @Test
-    public void testClickMergeBtn3() throws Exception {
+    public void testClickBtnMergeRightToLeft() throws Exception {
         frameFixture.button(Controller.BTN_MERGE_RIGHT_TO_LEFT).click();
         frameFixture.dialog().requireVisible();
         sleep(2000);
@@ -132,7 +126,7 @@ public class GUITestRunner extends TestCase {
 
     // 버튼 이벤트 테스트. (Dialog가 나와야함. 안그러면 Assert 에러 처리.)
     @Test
-    public void testClickMergeBtn4() throws Exception {
+    public void testClickBtnMergeRightToLeftAll() throws Exception {
         frameFixture.button(Controller.BTN_MERGE_RIGHT_TO_LEFT_ALL).click();
         frameFixture.dialog().requireVisible();
         sleep(2000);
@@ -140,7 +134,7 @@ public class GUITestRunner extends TestCase {
 
     // 버튼 이벤트 테스트. (FileChooser가 나와야함. 안그러면 Assert 에러 처리.)
     @Test
-    public void testFileTextPaneButton0() throws Exception {
+    public void testClickBtnLeftLoad() throws Exception {
         frameFixture.button(Controller.BTN_LEFT_LOAD).click();
         frameFixture.fileChooser().requireVisible();
         sleep(2000);
@@ -148,7 +142,7 @@ public class GUITestRunner extends TestCase {
 
     // 버튼 이벤트 테스트. (FileChooser가 나와야함. 안그러면 Assert 에러 처리.)
     @Test
-    public void testFileTextPaneButton1() throws Exception {
+    public void testClickBtnRightLoad() throws Exception {
         frameFixture.button(Controller.BTN_RIGHT_LOAD).click();
         frameFixture.fileChooser().requireVisible();
         sleep(2000);
@@ -156,7 +150,7 @@ public class GUITestRunner extends TestCase {
 
     // 버튼 이벤트 테스트. (FileChooser가 나와야함. 안그러면 Assert 에러 처리.)
     @Test
-    public void testFileTextPaneButton2() throws Exception {
+    public void testClickBtnLeftSave() throws Exception {
         frameFixture.button(Controller.BTN_LEFT_SAVE).click();
         frameFixture.dialog().requireVisible();
         sleep(2000);
@@ -164,7 +158,7 @@ public class GUITestRunner extends TestCase {
 
     // 버튼 이벤트 테스트. (FileChooser가 나와야함. 안그러면 Assert 에러 처리.)
     @Test
-    public void testFileTextPaneButton3() throws Exception {
+    public void testClickBtnRightSave() throws Exception {
         frameFixture.button(Controller.BTN_RIGHT_SAVE).click();
         frameFixture.dialog().requireVisible();
         sleep(2000);
@@ -172,7 +166,7 @@ public class GUITestRunner extends TestCase {
 
     // 버튼 이벤트 테스트. (FileChooser가 나와야함. 안그러면 Assert 에러 처리.)
     @Test
-    public void testFileTextPaneButton4() throws Exception {
+    public void testClickBtnLeftEdit() throws Exception {
         frameFixture.button(Controller.BTN_LEFT_EDIT).click();
         frameFixture.dialog().requireVisible();
         sleep(2000);
@@ -180,7 +174,7 @@ public class GUITestRunner extends TestCase {
 
     // 버튼 이벤트 테스트. (FileChooser가 나와야함. 안그러면 Assert 에러 처리.)
     @Test
-    public void testFileTextPaneButton5() throws Exception {
+    public void testClickBtnRightEdit() throws Exception {
         frameFixture.button(Controller.BTN_RIGHT_EDIT).click();
         frameFixture.dialog().requireVisible();
         sleep(2000);

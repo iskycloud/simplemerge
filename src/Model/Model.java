@@ -1,13 +1,6 @@
-/**
- * Created by xpathz on 2017. 5. 19..
- */
-
 package Model;
 
 import View.View;
-
-import javax.swing.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Model {

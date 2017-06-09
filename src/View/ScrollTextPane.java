@@ -1,16 +1,9 @@
-/**
- * Created by iskyc on 2017-05-19.
- */
-
 package View;
 
 import Model.*;
-
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

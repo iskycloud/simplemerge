@@ -1,14 +1,11 @@
 package Model;
 
+import View.View;
 import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 
-import View.View;
 
-/**
- * Created by xpathz on 2017. 5. 18..
- */
 public class FileModel implements FileModelInterface {
     private String target;
     private String filePath;

@@ -1,7 +1,6 @@
 package UnitTest;
 
 import Model.*;
-
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.AfterClass;
@@ -9,12 +8,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import static org.easymock.EasyMock.*;
-
 import java.util.ArrayList;
 
-/**
- * Created by xpathz on 2017. 6. 5..
- */
 public class UnitTestRunner extends TestCase {
 
     private FileModelInterface mock;
@@ -52,7 +47,7 @@ public class UnitTestRunner extends TestCase {
     @Test
     public void testLoad() {
         ArrayList<String> result = new ArrayList<String>();
-        String testPath = "/Users/apple/hellogit/src/right.txt"; // 현재 절대경로임
+        String testPath = "./example/left.txt"; // 파일 경로 설정
 
         model.leftFileModel.setFilePath(testPath);
         model.leftFileModel.loadLines();
@@ -74,8 +69,8 @@ public class UnitTestRunner extends TestCase {
     @Test
     public void testSave() {
         ArrayList<String> result = new ArrayList<String>();
-        String testPath = "/Users/apple/hellogit/src/left.txt"; // 현재 절대경로임
-        String testDestPath = "/Users/apple/hellogit/src/right.txt"; // 현재 절대경로임
+        String testPath = "./example/left.txt"; // 파일 경로 설정
+        String testDestPath = "./example/right.txt"; // 파일 경로 설정
 
         model.leftFileModel.setFilePath(testPath);
         model.leftFileModel.loadLines();
@@ -102,8 +97,8 @@ public class UnitTestRunner extends TestCase {
         String expectedResult = "I beleve I can y";
         String result = CalcDiff.lcs(left, right);
 
-        assertEquals(expectedResult, result);
-    }
+    assertEquals(expectedResult, result);
+}
 
     // 두 파일 모델들의 라인 어레이리스트간 비교를 실시하며, 이러한 비교와 DiffCharSet 어레이리스트의 결과가 유효한지 검증하는 유닛 테스트.
     // 성공 : 각 파일모델 및 라인 별 LCS 결과 + 해당 라인의 DiffCharSet 사이즈 = 원래 라인의 Length.
@@ -112,8 +107,8 @@ public class UnitTestRunner extends TestCase {
     public void testCompare() {
 
         ArrayList<Character> diffChars = new ArrayList<Character>();
-        String testPath = "/Users/apple/hellogit/src/left.txt"; // 현재 절대경로임
-        String testDestPath = "/Users/apple/hellogit/src/right.txt"; // 현재 절대경로임
+        String testPath = "./example/left.txt"; // 파일 경로 설정
+        String testDestPath = "./example/right.txt"; // 파일 경로 설정
 
         model.leftFileModel.setFilePath(testPath);
         model.leftFileModel.loadLines();
@@ -132,6 +127,5 @@ public class UnitTestRunner extends TestCase {
             int diffCharSize = model.leftFileModel.getLines().get(i).getDiffCharSet().size();
             assertEquals(model.leftFileModel.getLines().get(i).toString().length(), lcsLength + diffCharSize);
         }
-
     }
 }

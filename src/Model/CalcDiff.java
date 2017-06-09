@@ -1,7 +1,3 @@
-/**
- * Created by xstel on 2017-05-14.
- */
-
 package Model;
 
 import java.util.ArrayList;
@@ -50,7 +46,6 @@ public class CalcDiff {
 
     // Fake Line
     public static void addFakeLine(ArrayList<Line> leftLines, ArrayList<Line> rightLines) {
-        // TODO Modify : Fake Line String
         Line fakeLine = new Line("", -1);
         ArrayList<Line> minLines;
         int row, addLeftRow, addRightRow, diffLineSize;
@@ -118,16 +113,6 @@ public class CalcDiff {
             for (int i = 0; i < diffLineSize; i++) {
                 minLines.add(fakeLine);
             }
-        }
-
-        // TODO Remove : Print console for debug
-        System.out.println("Left:");
-        for (int i = 0; i < leftLines.size(); i++) {
-            System.out.println(leftLines.get(i).getState() + " : " + leftLines.get(i).toString());
-        }
-        System.out.println("Right:");
-        for (int i = 0; i < rightLines.size(); i++) {
-            System.out.println(rightLines.get(i).getState() + " : " + rightLines.get(i).toString());
         }
     }
 

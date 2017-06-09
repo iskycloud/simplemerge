@@ -1,7 +1,3 @@
-/**
- * Created by iskyc on 2017-05-13.
- */
-
 package View;
 
 import Controller.Controller;
@@ -20,9 +16,6 @@ public class View {
     private JPanel frmBodyPane, westPane, eastPane;
     private FileTextPane leftFilePane, rightFilePane;
     private ControlPane ctlPane;
-
-/** TODO Implementation :  LocationPane */
-//  LocationPane
 
     public View() {
         initBodyPane();
@@ -52,15 +45,11 @@ public class View {
     private void initWestPane() {
         westPane = new JPanel();
         leftFilePane = new FileTextPane();
-/** TODO Implementation :  LocationPane */
-//
-        // 로케이션 판 추가됨! 단, 현재는 임시로 텍스트에어리어들 둔 것임!!!!!
         locPane = new LocationPane();
 
         westPane.setLayout(new BorderLayout());
 
         frmBodyPane.add(westPane, 0);
-/** TODO Implementation :  LocationPane */
         westPane.add(locPane, BorderLayout.WEST);
         westPane.add(leftFilePane, BorderLayout.CENTER);
 
@@ -87,7 +76,7 @@ public class View {
         locPane.setModel(left, right);
     }
 
-    // 현재 J프레임을 리턴해주는 메소드.
+    // 현재 JFrame을 리턴해주는 메소드.
     // 주로 컨트롤러에서 창을 띄울 때 사용함.
     public JFrame getFrame() {
         return this.frmMain;
