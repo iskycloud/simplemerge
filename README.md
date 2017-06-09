@@ -25,8 +25,9 @@ Human ICT Software Engineering 2017 Spring Term Project : SimpleMerge
     4. IntelliJ IDEA Community Edition 실행
     5. Open 클릭
     6. simplemerge 폴더 선택 후 OK 버튼 클릭
-    7. File 메뉴 – Project Structure (Ctrl+Alt+Shift+S) 메뉴 클릭
-    8. Project Settings 탭 – Project 메뉴 클릭
+    7. File 메뉴 - Project Structure (Ctrl+Alt+Shift+S) 메뉴 클릭
+    8. Project Settings 탭 - Project 메뉴 클릭
     9. Project SDK 항목에서 ①에서 설치한 JDK 경로 설정 후 OK 버튼 클릭
-    10. Run 메뉴 – Run ‘simplemerge’ (Shift+F10) 메뉴 클릭
-    11. SimpleMerge 프로그램 빌드 후 실행
+    10. Build 메뉴 - Build Project (Ctrl+F9) 메뉴 클릭
+    11. Run 메뉴 - Run 'simplemerge' (Shift+F10) 메뉴 클릭
+    12. SimpleMerge 프로그램 빌드 및 실행
