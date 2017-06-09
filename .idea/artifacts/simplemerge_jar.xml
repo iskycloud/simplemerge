@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="simplemerge:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/simplemerge_jar</output-path>
+    <root id="archive" name="simplemerge.jar">
+      <element id="module-output" name="simplemerge" />
+    </root>
+  </artifact>
+</component>
