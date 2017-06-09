@@ -10,7 +10,7 @@ Human ICT Software Engineering 2017 Spring Term Project : SimpleMerge
 - Kim Dongju
 - Kim Youngjin
 
-##How to
+## How to
 1. How to execute our software
     1. Java SE Runtime Environment 1.8.0 설치
         - URL : http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html
